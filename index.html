@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+        <meta charset="UTF-8" />
+        <title>Mini Job board</title>
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <h1>Mini Job Board</h1>
+
+        <input
+type="text"
+id="searchInput"
+placeholder="Search jobs..."
+/>
+
+        <select id="typeFilter">
+            <option value="all">All</option>
+            <option value="remote">Remote</option>
+            <option value="hybrid">Hybrid</option>
+            <option value="onsite">Onsite</option>
+        </select>
+
+        <select id="seniorityFilter">
+            <option value="all">All Levels</option>
+            <option value="junior">Junior</option>
+            <option value="semi-senior">Semi Senior</option>
+            <option value="senior">Senior</option>
+            <option value="trainee">Trainee</option>
+        </select>
+        <div id="jobs-list"></div>
+        <div id="empty-state" class="empty-state" hidden>No results found.</div>
+
+        <button id="darkModeBtn" class="theme-toggle">🌙</button>
+        <button id="clearFilters">Clear Filters</button>
+
+        <script src="app.js" defer></script>
+    </body>
+</html>

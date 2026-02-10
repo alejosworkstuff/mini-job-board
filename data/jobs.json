@@ -1,0 +1,162 @@
+[
+  {
+    "id": 21,
+    "title": "Fullstack Developer",
+    "company": "CodeWave",
+    "type": "Remote",
+    "location": "LATAM",
+    "seniority": "Semi-Senior"
+  },
+  {
+    "id": 4,
+    "title": "Backend Developer",
+    "company": "Cloud Delta",
+    "type": "Onsite",
+    "location": "Mexico",
+    "seniority": "Trainee"
+  },
+  {
+    "id": 11,
+    "title": "Senior Frontend Developer",
+    "company": "ScaleUp Corp",
+    "type": "Remote",
+    "location": "Global",
+    "seniority": "Senior"
+  },
+  {
+    "id": 8,
+    "title": "React Developer",
+    "company": "WebWorks",
+    "type": "Remote",
+    "location": "Brazil",
+    "seniority": "Semi-Senior"
+  },
+  {
+    "id": 22,
+    "title": "Backend Engineer",
+    "company": "InfraCloud",
+    "type": "Hybrid",
+    "location": "Spain",
+    "seniority": "Semi-Senior"
+  },
+  {
+    "id": 1,
+    "title": "Frontend Developer",
+    "company": "Startup Alpha",
+    "type": "Remote",
+    "location": "LATAM",
+    "seniority": "Junior"
+  },
+  {
+    "id": 16,
+    "title": "Frontend Trainee",
+    "company": "Learning Tech",
+    "type": "Onsite",
+    "location": "Argentina",
+    "seniority": "Trainee"
+  },
+  {
+    "id": 23,
+    "title": "Software Engineer",
+    "company": "BlueRocket Tech",
+    "type": "Onsite",
+    "location": "Colombia",
+    "seniority": "Semi-Senior"
+  },
+  {
+    "id": 12,
+    "title": "Senior Fullstack Engineer",
+    "company": "Enterprise Labs",
+    "type": "Hybrid",
+    "location": "Argentina",
+    "seniority": "Senior"
+  },
+  {
+    "id": 6,
+    "title": "Software Developer",
+    "company": "NextGen Solutions",
+    "type": "Hybrid",
+    "location": "Colombia",
+    "seniority": "Junior"
+  },
+  {
+    "id": 24,
+    "title": "Frontend Developer",
+    "company": "PixelCraft Studio",
+    "type": "Remote",
+    "location": "Portugal",
+    "seniority": "Semi-Senior"
+  },
+  {
+    "id": 3,
+    "title": "Frontend Developer",
+    "company": "Dev Games",
+    "type": "Remote",
+    "location": "Global",
+    "seniority": "Trainee"
+  },
+  {
+    "id": 18,
+    "title": "Junior Software Developer",
+    "company": "Bright Solutions",
+    "type": "Hybrid",
+    "location": "Chile",
+    "seniority": "Junior"
+  },
+  {
+    "id": 13,
+    "title": "Backend Engineer",
+    "company": "InfraTech",
+    "type": "Onsite",
+    "location": "USA",
+    "seniority": "Semi-Senior"
+  },
+  {
+    "id": 25,
+    "title": "JavaScript Developer",
+    "company": "DevRoot",
+    "type": "Hybrid",
+    "location": "Uruguay",
+    "seniority": "Semi-Senior"
+  },
+  {
+    "id": 9,
+    "title": "Frontend Engineer",
+    "company": "TechNova",
+    "type": "Hybrid",
+    "location": "Uruguay",
+    "seniority": "Semi-Senior"
+  },
+  {
+    "id": 15,
+    "title": "Software Engineer",
+    "company": "Data Systems",
+    "type": "Hybrid",
+    "location": "Canada",
+    "seniority": "Senior"
+  },
+  {
+    "id": 2,
+    "title": "Web Developer",
+    "company": "Tech Beta",
+    "type": "Hybrid",
+    "location": "Argentina",
+    "seniority": "Junior"
+  },
+  {
+    "id": 20,
+    "title": "Frontend Engineer",
+    "company": "UX Factory",
+    "type": "Onsite",
+    "location": "Germany",
+    "seniority": "Semi-Senior"
+  },
+  {
+    "id": 19,
+    "title": "Senior Backend Engineer",
+    "company": "HighLoad Systems",
+    "type": "Remote",
+    "location": "USA",
+    "seniority": "Senior"
+  }
+]
