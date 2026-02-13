@@ -52,14 +52,15 @@ body {
     bottom: 20px;
     right: 20px;
     border: none;
-    border-radius: 50%;
-    width: 44px;
+    border-radius: 999px;
+    min-width: 72px;
     height: 44px;
     cursor: pointer;
-    font: size;
+    font-size: 14px;
     background: #222;
     color: #fff;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    padding: 0 12px;
 }
 
 

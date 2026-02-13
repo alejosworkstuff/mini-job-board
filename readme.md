@@ -1,6 +1,6 @@
 # Mini Job Board
 
-A simple frontend project that simulates a real job board.
+A lightweight frontend project that simulates a real job board.
 
 ## Features
 
@@ -9,7 +9,7 @@ A simple frontend project that simulates a real job board.
 - Filter by job type and seniority
 - Empty state handling
 - Dark mode with persistence
-- Clean and responsive UI
+- Responsive UI
 
 ## Tech stack
 
@@ -24,4 +24,4 @@ A simple frontend project that simulates a real job board.
 
 ## Screenshot
 
-(Add a screenshot here)
+Screenshot pending. Add one before publishing this project in your portfolio.
