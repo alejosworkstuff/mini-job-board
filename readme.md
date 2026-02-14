@@ -24,4 +24,8 @@ A lightweight frontend project that simulates a real job board.
 
 ## Screenshot
 
-Screenshot pending. Add one before publishing this project in your portfolio.
+![Main page (Light mode)](./assets/screenshots/main-light.png)
+
+![Main page (Dark mode)](./assets/screenshots/main-dark.png)
+
+Add the two files above to ssets/screenshots/ before publishing.

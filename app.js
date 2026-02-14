@@ -90,7 +90,7 @@ function renderJobs(list) {
         </span>
       </div>
       <p class="job-company">${job.company}</p>
-      <p class="job-meta">${job.type} · ${job.location}</p>
+      <p class="job-meta">${job.type} - ${job.location}</p>
     `;
 
     jobsListElement.appendChild(jobDiv);
