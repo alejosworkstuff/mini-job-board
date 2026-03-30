@@ -7,30 +7,71 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <h1>Mini Job Board</h1>
+    <header class="top-bar">
+      <h1 class="site-title">Mini Job Board</h1>
+      <button id="darkModeBtn" class="theme-toggle">Theme</button>
+    </header>
 
-    <input type="text" id="searchInput" placeholder="Search jobs..." />
+    <main class="page">
+      <div class="filters">
+        <div class="filters-top">
+          <div class="search-wrap">
+            <input type="text" id="searchInput" placeholder="Search jobs..." />
+            <button
+              id="clearSearch"
+              class="clear-search"
+              type="button"
+              aria-label="Clear search"
+              hidden
+            >
+              ×
+            </button>
+          </div>
+          <button
+            id="toggleFilters"
+            class="filters-toggle"
+            aria-expanded="true"
+            aria-controls="filtersPanel"
+          >
+            Filters
+            <span id="activeFiltersBadge" class="filters-badge" hidden>0</span>
+          </button>
+        </div>
 
-    <select id="typeFilter">
-      <option value="all">All</option>
-      <option value="remote">Remote</option>
-      <option value="hybrid">Hybrid</option>
-      <option value="onsite">Onsite</option>
-    </select>
+        <div id="filtersPanel" class="filters-panel">
+          <select id="typeFilter">
+            <option value="all">All</option>
+            <option value="remote">Remote</option>
+            <option value="hybrid">Hybrid</option>
+            <option value="onsite">Onsite</option>
+          </select>
 
-    <select id="seniorityFilter">
-      <option value="all">All Levels</option>
-      <option value="junior">Junior</option>
-      <option value="semi-senior">Semi Senior</option>
-      <option value="senior">Senior</option>
-      <option value="trainee">Trainee</option>
-    </select>
+          <select id="seniorityFilter">
+            <option value="all">All Levels</option>
+            <option value="junior">Junior</option>
+            <option value="semi-senior">Semi Senior</option>
+            <option value="senior">Senior</option>
+            <option value="trainee">Trainee</option>
+          </select>
 
-    <div id="jobs-list"></div>
-    <div id="empty-state" class="empty-state" hidden>No results found.</div>
+          <select id="sortBy">
+            <option value="newest">Newest</option>
+            <option value="company-az">Company A-Z</option>
+            <option value="remote-first">Remote first</option>
+          </select>
 
-    <button id="darkModeBtn" class="theme-toggle">Theme</button>
-    <button id="clearFilters">Clear Filters</button>
+          <button id="clearFilters" class="clear-filters">Clear Filters</button>
+        </div>
+        <div id="resultsCount" class="results-count">0 jobs found</div>
+      </div>
+
+      <div id="jobs-list"></div>
+      <div id="empty-state" class="empty-state" hidden>
+        <div class="empty-illustration">No results found.</div>
+        <p class="empty-tip">Try clearing filters or searching for a different role.</p>
+      </div>
+      <button id="loadMore" class="load-more" hidden>Load more</button>
+    </main>
 
     <script src="app.js" defer></script>
     <footer class="site-footer">
