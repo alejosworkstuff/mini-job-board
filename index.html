@@ -87,7 +87,24 @@
       <button id="loadMore" class="load-more" hidden>Load more</button>
     </main>
     <div id="toast" class="toast" aria-live="polite" aria-atomic="true"></div>
+    
+    <div id="jobModal" class="job-modal" hidden>
+  <div class="job-modal-backdrop" data-close-modal> </div>
+
+  <div class="job-modal-content" role="dialog" aria-modal="true" aria-labelledby="jobModalTitle">
+    <button type="button" class="job-modal-close" id="closeJobModal" aria-label="Close">×</button>
+    <h2 id="jobModalTitle">Job Title</h2>
+    <p id="jobModalCompany">Company</p>
+    <p id="jobModalMeta">Type • Location • Seniority</p>
+    <p id="jobModalDescription">Job description will appear here.</p>
+
+  <a id="jobModalDetailsLink" href="#">Open full details page</a>
+  </div>
+  </div>
+
     <script src="app.js" defer></script>
+
+
     <footer class="site-footer">
       <div class="footer-inner">
         <a

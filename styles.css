@@ -755,3 +755,101 @@ body.dark .site-footer {
     transition: none !important;
   }
 }
+
+@keyframes job-modal-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes job-modal-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+/* ===== Job modal (popup) ===== */
+.job-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.job-modal[hidden] {
+  display: none;
+}
+
+.job-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  cursor: pointer;
+}
+
+.job-modal-content {
+  position: relative;
+  z-index: 1;
+  width: min(520px, 100%);
+  max-height: min(85vh, 640px);
+  overflow: auto;
+  padding: 22px 22px 18px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+}
+
+.job-modal:not([hidden]) .job-modal-backdrop {
+  animation: job-modal-backdrop-in var(--motion-base) ease forwards;
+}
+
+.job-modal:not([hidden]) .job-modal-content {
+  animation: job-modal-content-in var(--motion-base) ease forwards;
+  transform-origin: center center;
+}
+
+.job-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--text);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.job-modal-close:hover {
+  background: var(--surface-strong);
+}
+
+#jobModalDescription {
+  margin-top: 12px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+body.dark .job-modal-backdrop {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+body.dark .job-modal-content {
+  background: var(--surface);
+  border-color: var(--border);
+}

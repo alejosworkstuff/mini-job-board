@@ -19,6 +19,13 @@ const toast = document.getElementById("toast");
 const viewGridBtn = document.getElementById("viewGridBtn");
 const viewListBtn = document.getElementById("viewListBtn");
 const savedCountElement = document.getElementById("savedCount");
+const jobModal = document.getElementById("jobModal");
+const jobModalTitle = document.getElementById("jobModalTitle");
+const jobModalCompany = document.getElementById("jobModalCompany");
+const jobModalMeta = document.getElementById("jobModalMeta");
+const jobModalDescription = document.getElementById("jobModalDescription");
+const jobModalDetailsLink = document.getElementById("jobModalDetailsLink");
+const closeJobModalBtn = document.getElementById("closeJobModal");
 
 // ===== DATA =====
 let jobs = [];
@@ -108,6 +115,21 @@ if (viewGridBtn && viewListBtn) {
 
 if (jobsListElement) {
   jobsListElement.addEventListener("click", (event) => {
+    const applyButton = event.target.closest(".apply-btn");
+    if (applyButton) {
+      const id = Number(applyButton.dataset.jobId);
+      const job = jobs.find((j) => j.id === id);
+      if (job) openJobModal(job);
+      return;
+    }
+
+    const detailsButton = event.target.closest(".ghost-btn");
+    if (detailsButton) {
+      const id = detailsButton.dataset.jobId;
+      window.location.href = `job-details.html?id=${id}`;
+      return;
+    }
+
     const saveButton = event.target.closest(".save-job-btn");
     if (!saveButton) return;
 
@@ -193,8 +215,8 @@ function renderJobs(list) {
       <p class="job-company">${job.company}</p>
       <div class="job-meta">${chips}</div>
       <div class="job-actions">
-        <button type="button" class="apply-btn">Apply now</button>
-        <button type="button" class="ghost-btn">Details</button>
+        <button type="button" class="apply-btn" data-job-id="${job.id}">Apply now</button>
+        <button type="button" class="ghost-btn" data-job-id="${job.id}">Details</button>
       </div>
     `;
 
@@ -339,6 +361,48 @@ function resetAllFilters() {
 function slugify(value = "") {
   return value.toLowerCase().trim().replace(/\s+/g, "-");
 }
+
+function openJobModal(job) {
+  if (!jobModal || !jobModalTitle) return;
+
+  jobModalTitle.textContent = job.title;
+  if (jobModalCompany) jobModalCompany.textContent = job.company;
+  if (jobModalMeta) {
+    jobModalMeta.textContent = [job.type, job.location, job.seniority].filter(Boolean).join(" • ");
+  }
+  if (jobModalDescription) {
+    jobModalDescription.textContent =
+      job.description ||
+      'No long description yet. Add a "description" field in data/jobs.json, or use the full details page.';
+  }
+  if (jobModalDetailsLink) {
+    jobModalDetailsLink.href = `job-details.html?id=${job.id}`;
+  }
+
+  jobModal.hidden = false;
+  document.body.style.overflow = "hidden";
+  if (closeJobModalBtn) closeJobModalBtn.focus();
+}
+
+function closeJobModal() {
+  if (!jobModal) return;
+  jobModal.hidden = true;
+  document.body.style.overflow = "";
+}
+
+if (jobModal) {
+  jobModal.addEventListener("click", (event) => {
+    if (event.target.closest("[data-close-modal]")) closeJobModal();
+  });
+}
+
+if (closeJobModalBtn) {
+  closeJobModalBtn.addEventListener("click", closeJobModal);
+}
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && jobModal && !jobModal.hidden) closeJobModal();
+});
 
 // ===== INIT =====
 document.addEventListener("DOMContentLoaded", () => {
