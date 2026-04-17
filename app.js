@@ -13,40 +13,46 @@ const resultsCount = document.getElementById("resultsCount");
 const clearSearchBtn = document.getElementById("clearSearch");
 const activeFiltersBadge = document.getElementById("activeFiltersBadge");
 const loadMoreBtn = document.getElementById("loadMore");
+const emptyResetBtn = document.getElementById("emptyResetBtn");
+const darkModeBtn = document.getElementById("darkModeBtn");
+const toast = document.getElementById("toast");
+const viewGridBtn = document.getElementById("viewGridBtn");
+const viewListBtn = document.getElementById("viewListBtn");
+const savedCountElement = document.getElementById("savedCount");
 
 // ===== DATA =====
 let jobs = [];
 let filteredJobs = [];
 let currentPage = 1;
+let currentView = localStorage.getItem("jobsViewMode") || "grid";
+let savedJobs = new Set(readStoredSavedJobs());
 const PAGE_SIZE = 6;
 
 // ===== FETCH =====
 fetch("./data/jobs.json")
-  .then(response => response.json())
-  .then(data => {
+  .then((response) => response.json())
+  .then((data) => {
     jobs = data;
     applyFilters();
   })
-  .catch(err => console.error("Error loading jobs:", err));
+  .catch((err) => console.error("Error loading jobs:", err));
 
 // ===== EVENTS =====
 searchInput.addEventListener("input", () => {
   toggleClearSearch();
   applyFilters();
 });
+
 typeFilter.addEventListener("change", applyFilters);
 seniorityFilter.addEventListener("change", applyFilters);
 sortBy.addEventListener("change", applyFilters);
 
 if (clearFiltersBtn) {
-  clearFiltersBtn.addEventListener("click", () => {
-    searchInput.value = "";
-    typeFilter.value = "all";
-    seniorityFilter.value = "all";
-    sortBy.value = "newest";
-    toggleClearSearch();
-    applyFilters();
-  });
+  clearFiltersBtn.addEventListener("click", resetAllFilters);
+}
+
+if (emptyResetBtn) {
+  emptyResetBtn.addEventListener("click", resetAllFilters);
 }
 
 if (clearSearchBtn) {
@@ -83,6 +89,36 @@ if (toggleFiltersBtn && filtersPanel && filtersWrapper) {
   setCollapsed(stored);
 }
 
+if (darkModeBtn) {
+  darkModeBtn.addEventListener("click", () => {
+    const isDark = document.body.classList.toggle("dark");
+    localStorage.setItem("darkMode", String(isDark));
+    darkModeBtn.textContent = isDark ? "Light" : "Dark";
+  });
+}
+
+if (viewGridBtn && viewListBtn) {
+  viewGridBtn.addEventListener("click", () => {
+    setViewMode("grid");
+  });
+  viewListBtn.addEventListener("click", () => {
+    setViewMode("list");
+  });
+}
+
+if (jobsListElement) {
+  jobsListElement.addEventListener("click", (event) => {
+    const saveButton = event.target.closest(".save-job-btn");
+    if (!saveButton) return;
+
+    const id = Number(saveButton.dataset.jobId);
+    toggleSavedJob(id);
+    renderSaveButton(saveButton, id);
+    updateSavedCount();
+    showToast(savedJobs.has(id) ? "Saved job to your list" : "Removed from saved jobs");
+  });
+}
+
 // ===== FILTER LOGIC =====
 function applyFilters() {
   const searchText = searchInput.value.toLowerCase().trim();
@@ -93,23 +129,21 @@ function applyFilters() {
   filteredJobs = [...jobs];
 
   if (selectedType !== "all") {
-    filteredJobs = filteredJobs.filter(
-      job => job.type.toLowerCase() === selectedType
-    );
+    filteredJobs = filteredJobs.filter((job) => job.type.toLowerCase() === selectedType);
   }
 
   if (selectedSeniority !== "all") {
-    filteredJobs = filteredJobs.filter(
-      job => job.seniority.toLowerCase() === selectedSeniority
-    );
+    filteredJobs = filteredJobs.filter((job) => job.seniority.toLowerCase() === selectedSeniority);
   }
 
   if (searchText !== "") {
-    filteredJobs = filteredJobs.filter(
-      job =>
+    filteredJobs = filteredJobs.filter((job) => {
+      return (
         job.title.toLowerCase().includes(searchText) ||
-        job.company.toLowerCase().includes(searchText)
-    );
+        job.company.toLowerCase().includes(searchText) ||
+        (job.location || "").toLowerCase().includes(searchText)
+      );
+    });
   }
 
   filteredJobs = sortJobs(filteredJobs, sortBy.value);
@@ -121,33 +155,50 @@ function applyFilters() {
 function renderJobs(list) {
   jobsListElement.innerHTML = "";
 
-  list.forEach(job => {
-    const jobDiv = document.createElement("div");
-    jobDiv.className = "job";
-    jobDiv.tabIndex = 0;
+  list.forEach((job, index) => {
+    const jobCard = document.createElement("article");
+    jobCard.className = "job";
+    jobCard.tabIndex = 0;
+    jobCard.style.animationDelay = `${index * 45}ms`;
 
-    const badgeClass = job.seniority
-      .toLowerCase()
-      .replace(" ", "-");
-
+    const badgeClass = slugify(job.seniority);
     const chips = [
       job.type ? `<span class="chip">${job.type}</span>` : "",
       job.location ? `<span class="chip">${job.location}</span>` : "",
       job.salary ? `<span class="chip">${job.salary}</span>` : ""
     ].join("");
 
-    jobDiv.innerHTML = `
+    const isSaved = savedJobs.has(job.id);
+    const saveLabel = isSaved ? "Saved" : "Save";
+    const saveStateClass = isSaved ? "is-saved" : "";
+    const savePressed = isSaved ? "true" : "false";
+
+    jobCard.innerHTML = `
+      <div class="job-top">
+        <p class="job-time">Posted recently</p>
+        <button
+          class="save-job-btn ${saveStateClass}"
+          type="button"
+          data-job-id="${job.id}"
+          aria-label="${isSaved ? "Unsave job" : "Save job"}"
+          aria-pressed="${savePressed}"
+        >
+          ${saveLabel}
+        </button>
+      </div>
       <div class="job-header">
         <h3 class="job-title">${job.title}</h3>
-        <span class="badge ${badgeClass}">
-          ${job.seniority}
-        </span>
+        <span class="badge ${badgeClass}">${job.seniority}</span>
       </div>
       <p class="job-company">${job.company}</p>
       <div class="job-meta">${chips}</div>
+      <div class="job-actions">
+        <button type="button" class="apply-btn">Apply now</button>
+        <button type="button" class="ghost-btn">Details</button>
+      </div>
     `;
 
-    jobsListElement.appendChild(jobDiv);
+    jobsListElement.appendChild(jobCard);
   });
 }
 
@@ -156,23 +207,21 @@ function updateResults() {
   const visible = filteredJobs.slice(0, currentPage * PAGE_SIZE);
 
   renderJobs(visible);
-  updateResultsCount(total);
+  updateResultsCount(total, visible.length);
+  updateSavedCount();
 
-  if (total === 0) {
-    emptyState.style.display = "block";
-  } else {
-    emptyState.style.display = "none";
-  }
+  emptyState.hidden = total !== 0;
 
   if (loadMoreBtn) {
     loadMoreBtn.hidden = visible.length >= total || total === 0;
   }
 }
 
-function updateResultsCount(total) {
+function updateResultsCount(total, visible) {
   if (!resultsCount) return;
   const label = total === 1 ? "job" : "jobs";
-  resultsCount.textContent = `${total} ${label} found`;
+  const details = total > visible ? `${visible}/${total}` : `${total}`;
+  resultsCount.textContent = `${details} ${label} shown`;
 }
 
 function toggleClearSearch() {
@@ -197,6 +246,53 @@ function updateActiveFiltersBadge(searchText) {
   activeFiltersBadge.textContent = String(count);
 }
 
+function updateSavedCount() {
+  if (!savedCountElement) return;
+  const count = savedJobs.size;
+  savedCountElement.textContent = `Saved: ${count}`;
+}
+
+function setViewMode(mode) {
+  currentView = mode;
+  const isGrid = mode === "grid";
+  jobsListElement.classList.toggle("jobs-grid", isGrid);
+  jobsListElement.classList.toggle("jobs-list-view", !isGrid);
+  viewGridBtn.classList.toggle("is-active", isGrid);
+  viewListBtn.classList.toggle("is-active", !isGrid);
+  viewGridBtn.setAttribute("aria-pressed", String(isGrid));
+  viewListBtn.setAttribute("aria-pressed", String(!isGrid));
+  localStorage.setItem("jobsViewMode", mode);
+}
+
+function toggleSavedJob(id) {
+  if (savedJobs.has(id)) {
+    savedJobs.delete(id);
+  } else {
+    savedJobs.add(id);
+  }
+  localStorage.setItem("savedJobs", JSON.stringify([...savedJobs]));
+}
+
+function renderSaveButton(button, id) {
+  const isSaved = savedJobs.has(id);
+  button.classList.toggle("is-saved", isSaved);
+  button.setAttribute("aria-pressed", String(isSaved));
+  button.setAttribute("aria-label", isSaved ? "Unsave job" : "Save job");
+  button.textContent = isSaved ? "Saved" : "Save";
+}
+
+function showToast(message) {
+  if (!toast) return;
+  toast.textContent = message;
+  toast.classList.add("is-visible");
+  window.clearTimeout(showToast.timerId);
+  showToast.timerId = window.setTimeout(() => {
+    toast.classList.remove("is-visible");
+  }, 1700);
+}
+
+showToast.timerId = 0;
+
 function sortJobs(list, mode) {
   const sorted = [...list];
 
@@ -212,6 +308,7 @@ function sortJobs(list, mode) {
       if (type === "hybrid") return 1;
       return 2;
     };
+
     sorted.sort((a, b) => rank(a) - rank(b) || a.company.localeCompare(b.company));
     return sorted;
   }
@@ -220,17 +317,37 @@ function sortJobs(list, mode) {
   return sorted;
 }
 
-// ===== DARK MODE =====
+function readStoredSavedJobs() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("savedJobs") || "[]");
+    return Array.isArray(saved) ? saved.filter((id) => Number.isInteger(id)) : [];
+  } catch (error) {
+    console.warn("Could not parse saved jobs from localStorage.", error);
+    return [];
+  }
+}
 
+function resetAllFilters() {
+  searchInput.value = "";
+  typeFilter.value = "all";
+  seniorityFilter.value = "all";
+  sortBy.value = "newest";
+  toggleClearSearch();
+  applyFilters();
+}
+
+function slugify(value = "") {
+  return value.toLowerCase().trim().replace(/\s+/g, "-");
+}
+
+// ===== INIT =====
 document.addEventListener("DOMContentLoaded", () => {
   const isDark = localStorage.getItem("darkMode") === "true";
   document.body.classList.toggle("dark", isDark);
-});
-
-document.addEventListener("click", (e) => {
-  const darkModeBtn = e.target.closest("#darkModeBtn");
-  if (!darkModeBtn) return;
-
-  const isDark = document.body.classList.toggle("dark");
-  localStorage.setItem("darkMode", isDark);
+  if (darkModeBtn) {
+    darkModeBtn.textContent = isDark ? "Light" : "Dark";
+  }
+  setViewMode(currentView);
+  toggleClearSearch();
+  updateSavedCount();
 });

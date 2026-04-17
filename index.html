@@ -8,8 +8,11 @@
   </head>
   <body>
     <header class="top-bar">
-      <h1 class="site-title">Mini Job Board</h1>
-      <button id="darkModeBtn" class="theme-toggle">Theme</button>
+      <div class="title-wrap">
+        <h1 class="site-title">Mini Job Board</h1>
+        <p class="site-subtitle">Discover modern opportunities and apply faster.</p>
+      </div>
+      <button id="darkModeBtn" class="theme-toggle" aria-label="Toggle theme">Theme</button>
     </header>
 
     <main class="page">
@@ -62,23 +65,59 @@
 
           <button id="clearFilters" class="clear-filters">Clear Filters</button>
         </div>
-        <div id="resultsCount" class="results-count">0 jobs found</div>
+
+        <div class="results-toolbar">
+          <div id="resultsCount" class="results-count">0 jobs found</div>
+          <div class="toolbar-right">
+            <div class="saved-count" id="savedCount">Saved: 0</div>
+            <div class="view-toggle" role="group" aria-label="View mode">
+              <button id="viewGridBtn" class="view-btn is-active" type="button" aria-pressed="true">Grid</button>
+              <button id="viewListBtn" class="view-btn" type="button" aria-pressed="false">List</button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div id="jobs-list"></div>
+      <div id="jobs-list" class="jobs-grid"></div>
       <div id="empty-state" class="empty-state" hidden>
-        <div class="empty-illustration">No results found.</div>
+        <div class="empty-illustration">No results found</div>
         <p class="empty-tip">Try clearing filters or searching for a different role.</p>
+        <button id="emptyResetBtn" class="empty-reset" type="button">Reset filters</button>
       </div>
       <button id="loadMore" class="load-more" hidden>Load more</button>
     </main>
-
+    <div id="toast" class="toast" aria-live="polite" aria-atomic="true"></div>
     <script src="app.js" defer></script>
     <footer class="site-footer">
       <div class="footer-inner">
-        <a href="https://alejosworkstuff.github.io/portfolio/">Portfolio</a>
-        <span class="separator">•</span>
-        <a href="https://github.com/alejosworkstuff">GitHub</a>
+        <a
+          class="footer-link portfolio-link"
+          href="https://alejosworkstuff.github.io/portfolio/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Portfolio
+        </a>
+        <a
+          class="social-bubble social-github"
+          href="https://github.com/alejosworkstuff"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="GitHub Profile"
+          title="GitHub"
+        >
+          <img src="./assets/icons/github.svg" alt="" class="social-icon" />
+        </a>
+        <a
+          class="social-bubble social-linkedin"
+          href="https://www.linkedin.com/in/alejo-castillo-0b02b73b0/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="LinkedIn Profile"
+          title="LinkedIn"
+        >
+          <img src="./assets/icons/linkedin.svg" alt="" class="social-icon" />
+        </a>
       </div>
     </footer>
   </body>
