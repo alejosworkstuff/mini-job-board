@@ -1,21 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Saved Jobs</title>
-        <link rel="stylesheet" href="styles.css">
-    </head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Saved Jobs · Mini Job Board</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="top-bar">
+      <div class="top-bar-brand">
+        <div class="site-logo" aria-hidden="true">JB</div>
+        <div class="title-wrap">
+          <p class="site-title">Mini Job Board</p>
+          <p class="site-subtitle">Discover modern opportunities and apply faster.</p>
+        </div>
+      </div>
+      <div class="top-bar-spacer" aria-hidden="true"></div>
+      <div class="header-actions">
+        <div class="header-fake-nav" role="toolbar" aria-label="Demo navigation">
+          <button type="button" class="header-icon-btn" id="fakeHomeBtn" aria-label="Home (demo)">
+            <svg class="header-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-10.5z" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span class="header-icon-label">Home</span>
+          </button>
+          <button type="button" class="header-icon-btn" id="fakeNotifBtn" aria-label="Notifications (demo)">
+            <svg class="header-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0v1a3 3 0 11-6 0v-1" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span class="header-icon-label">Alerts</span>
+          </button>
+        </div>
+        <button id="darkModeBtn" class="theme-toggle header-theme" type="button" aria-label="Toggle theme">Dark</button>
+        <div class="header-account">
+          <button
+            type="button"
+            id="userMenuBtn"
+            class="user-avatar-btn"
+            aria-haspopup="menu"
+            aria-expanded="false"
+            aria-controls="userMenu"
+          >
+            <span class="user-avatar" aria-hidden="true">AC</span>
+          </button>
+          <div id="userMenu" class="user-menu" role="menu" aria-hidden="true">
+            <button type="button" role="menuitem" class="user-menu-item" data-action="profile">View Profile</button>
+            <button type="button" role="menuitem" class="user-menu-item" data-action="saved-jobs">Saved Jobs</button>
+            <button type="button" role="menuitem" class="user-menu-item" data-action="settings">Settings</button>
+            <button type="button" role="menuitem" class="user-menu-item" data-action="signout">Sign out</button>
+          </div>
+        </div>
+      </div>
+    </header>
 
-    <body>
-        <main class="page">
-            <h1>Saved Jobs</h1>
-            <a href="index.html">← Back to Home</a>
+    <main class="page saved-jobs-page">
+      <h1 class="saved-jobs-page-title">Saved Jobs</h1>
+      <p class="saved-jobs-page-lede"><a href="index.html" class="back-to-board">← All jobs</a></p>
+      <div id="saved-jobs-list" class="saved-jobs-page-grid"></div>
+      <p id="saved-empty" class="saved-jobs-empty-state" hidden>No saved jobs yet.</p>
+    </main>
 
-            <div id="saved-jobs-list"></div>
-            <p id="saved-empty" hidden>No saved jobs yet.</p>
-        </main>
+    <div id="toast" class="toast" aria-live="polite" aria-atomic="true"></div>
 
-        <script src="saved-jobs.js" defer></script>
-    </body>
+    <div id="jobModal" class="job-modal" hidden>
+      <div class="job-modal-backdrop" data-close-modal></div>
+      <div class="job-modal-content" role="dialog" aria-modal="true" aria-labelledby="jobModalTitle">
+        <button type="button" class="job-modal-close" id="closeJobModal" aria-label="Close">×</button>
+        <h2 id="jobModalTitle">Job Title</h2>
+        <p id="jobModalCompany">Company</p>
+        <p id="jobModalMeta">Type • Location • Seniority</p>
+        <p id="jobModalDescription">Job description will appear here.</p>
+        <a id="jobModalDetailsLink" class="ghost-btn" href="#">Open full details page</a>
+      </div>
+    </div>
+
+    <div id="savedJobsModal" class="job-modal saved-jobs-modal" hidden>
+      <div class="job-modal-backdrop" data-close-saved-modal></div>
+      <div
+        class="job-modal-content saved-jobs-modal-inner"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="savedJobsModalTitle"
+      >
+        <button type="button" class="job-modal-close" id="closeSavedJobsModal" aria-label="Close saved jobs">×</button>
+        <h2 id="savedJobsModalTitle" class="saved-jobs-modal-title">Saved jobs</h2>
+        <div id="savedJobsList" class="saved-jobs-list"></div>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <a
+          class="footer-link portfolio-link"
+          href="https://alejosworkstuff.github.io/portfolio/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Portfolio
+        </a>
+        <a class="social-bubble social-github" href="https://github.com/alejosworkstuff" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile" title="GitHub">
+          <img src="./assets/icons/github.svg" alt="" class="social-icon" />
+        </a>
+        <a
+          class="social-bubble social-linkedin"
+          href="https://www.linkedin.com/in/alejo-castillo-0b02b73b0/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="LinkedIn Profile"
+          title="LinkedIn"
+        >
+          <img src="./assets/icons/linkedin.svg" alt="" class="social-icon" />
+        </a>
+      </div>
+    </footer>
+
+    <script src="site-header.js" defer></script>
+    <script src="saved-jobs.js" defer></script>
+  </body>
 </html>

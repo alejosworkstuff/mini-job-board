@@ -15,6 +15,10 @@ const activeFiltersBadge = document.getElementById("activeFiltersBadge");
 const loadMoreBtn = document.getElementById("loadMore");
 const emptyResetBtn = document.getElementById("emptyResetBtn");
 const darkModeBtn = document.getElementById("darkModeBtn");
+const userMenuBtn = document.getElementById("userMenuBtn");
+const userMenu = document.getElementById("userMenu");
+const fakeHomeBtn = document.getElementById("fakeHomeBtn");
+const fakeNotifBtn = document.getElementById("fakeNotifBtn");
 const toast = document.getElementById("toast");
 const viewGridBtn = document.getElementById("viewGridBtn");
 const viewListBtn = document.getElementById("viewListBtn");
@@ -26,6 +30,9 @@ const jobModalMeta = document.getElementById("jobModalMeta");
 const jobModalDescription = document.getElementById("jobModalDescription");
 const jobModalDetailsLink = document.getElementById("jobModalDetailsLink");
 const closeJobModalBtn = document.getElementById("closeJobModal");
+const savedJobsModal = document.getElementById("savedJobsModal");
+const savedJobsList = document.getElementById("savedJobsList");
+const closeSavedJobsModalBtn = document.getElementById("closeSavedJobsModal");
 
 // ===== DATA =====
 let jobs = [];
@@ -35,12 +42,103 @@ let currentView = localStorage.getItem("jobsViewMode") || "grid";
 let savedJobs = new Set(readStoredSavedJobs());
 const PAGE_SIZE = 6;
 
+let filterDropdownConfigs = [];
+
+function syncFilterDropdownLabels() {
+  filterDropdownConfigs.forEach((cfg) => {
+    const opt = cfg.select.options[cfg.select.selectedIndex];
+    const labelSpan = cfg.trigger.querySelector(".filter-dropdown-label");
+    if (labelSpan && opt) labelSpan.textContent = opt.textContent;
+    cfg.list.querySelectorAll(".filter-dropdown-option").forEach((li) => {
+      li.setAttribute("aria-selected", li.dataset.value === cfg.select.value ? "true" : "false");
+    });
+  });
+}
+
+function closeFilterDropdown(cfg) {
+  cfg.list.classList.remove("is-open");
+  cfg.trigger.setAttribute("aria-expanded", "false");
+  cfg.list.setAttribute("aria-hidden", "true");
+}
+
+function closeAllFilterDropdowns() {
+  filterDropdownConfigs.forEach((cfg) => closeFilterDropdown(cfg));
+}
+
+function closeAllFilterDropdownsIfOpen() {
+  if (!document.querySelector(".filter-dropdown-panel.is-open")) return false;
+  closeAllFilterDropdowns();
+  return true;
+}
+
+function openFilterDropdown(cfg) {
+  cfg.list.setAttribute("aria-hidden", "false");
+  cfg.trigger.setAttribute("aria-expanded", "true");
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      cfg.list.classList.add("is-open");
+    });
+  });
+}
+
+function toggleFilterDropdown(cfg) {
+  if (cfg.list.classList.contains("is-open")) {
+    closeFilterDropdown(cfg);
+  } else {
+    closeAllFilterDropdowns();
+    openFilterDropdown(cfg);
+  }
+}
+
+function initFilterDropdowns() {
+  filterDropdownConfigs = [];
+  const specs = [
+    { select: typeFilter, triggerId: "typeFilterBtn", listId: "typeFilterList" },
+    { select: seniorityFilter, triggerId: "seniorityFilterBtn", listId: "seniorityFilterList" },
+    { select: sortBy, triggerId: "sortByBtn", listId: "sortByList" }
+  ];
+
+  specs.forEach((spec) => {
+    const trigger = document.getElementById(spec.triggerId);
+    const list = document.getElementById(spec.listId);
+    if (!spec.select || !trigger || !list) return;
+    const cfg = { ...spec, trigger, list };
+    filterDropdownConfigs.push(cfg);
+
+    trigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleFilterDropdown(cfg);
+    });
+
+    list.querySelectorAll(".filter-dropdown-option").forEach((opt) => {
+      opt.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const val = opt.dataset.value;
+        if (spec.select.value !== val) {
+          spec.select.value = val;
+          spec.select.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+        closeFilterDropdown(cfg);
+        syncFilterDropdownLabels();
+      });
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    if (event.target.closest(".filter-dropdown")) return;
+    closeAllFilterDropdowns();
+  });
+}
+
 // ===== FETCH =====
 fetch("./data/jobs.json")
   .then((response) => response.json())
   .then((data) => {
     jobs = data;
     applyFilters();
+    if (savedJobsModal && !savedJobsModal.hidden) {
+      renderSavedJobsList();
+    }
   })
   .catch((err) => console.error("Error loading jobs:", err));
 
@@ -103,6 +201,95 @@ if (darkModeBtn) {
     darkModeBtn.textContent = isDark ? "Light" : "Dark";
   });
 }
+
+function isUserMenuOpen() {
+  return Boolean(userMenu && userMenu.classList.contains("is-open"));
+}
+
+function openUserMenu() {
+  if (!userMenu || !userMenuBtn) return;
+  userMenu.setAttribute("aria-hidden", "false");
+  userMenuBtn.setAttribute("aria-expanded", "true");
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      userMenu.classList.add("is-open");
+    });
+  });
+  const firstItem = userMenu.querySelector('[role="menuitem"]');
+  if (firstItem) window.setTimeout(() => firstItem.focus(), 0);
+}
+
+function closeUserMenu() {
+  if (!userMenu || !userMenuBtn) return;
+  userMenu.classList.remove("is-open");
+  userMenuBtn.setAttribute("aria-expanded", "false");
+  userMenu.setAttribute("aria-hidden", "true");
+  let finished = false;
+  const finish = () => {
+    if (finished) return;
+    finished = true;
+    userMenuBtn.focus();
+  };
+  userMenu.addEventListener(
+    "transitionend",
+    (e) => {
+      if (e.target === userMenu && (e.propertyName === "opacity" || e.propertyName === "transform")) {
+        finish();
+      }
+    },
+    { once: true }
+  );
+  window.setTimeout(finish, 320);
+}
+
+function toggleUserMenu() {
+  if (isUserMenuOpen()) closeUserMenu();
+  else openUserMenu();
+}
+
+if (userMenuBtn && userMenu) {
+  userMenuBtn.addEventListener("click", (event) => {
+    event.stopPropagation();
+    toggleUserMenu();
+  });
+
+  userMenu.querySelectorAll(".user-menu-item").forEach((item) => {
+    item.addEventListener("click", () => {
+      const action = item.dataset.action;
+      if (action === "saved-jobs") {
+        closeUserMenu();
+        openSavedJobsModal();
+        return;
+      }
+      const labels = {
+        profile: "View Profile (demo)",
+        settings: "Settings (demo)",
+        signout: "Sign out (demo)"
+      };
+      showToast(labels[action] || "Done");
+      closeUserMenu();
+    });
+  });
+}
+
+if (fakeHomeBtn) {
+  fakeHomeBtn.addEventListener("click", () => {
+    showToast("Home (demo)");
+  });
+}
+
+if (fakeNotifBtn) {
+  fakeNotifBtn.addEventListener("click", () => {
+    showToast("Notifications (demo)");
+  });
+}
+
+document.addEventListener("click", (event) => {
+  if (!isUserMenuOpen()) return;
+  const account = event.target.closest(".header-account");
+  if (account) return;
+  closeUserMenu();
+});
 
 if (viewGridBtn && viewListBtn) {
   viewGridBtn.addEventListener("click", () => {
@@ -355,11 +542,120 @@ function resetAllFilters() {
   seniorityFilter.value = "all";
   sortBy.value = "newest";
   toggleClearSearch();
+  if (filterDropdownConfigs.length) syncFilterDropdownLabels();
   applyFilters();
 }
 
 function slugify(value = "") {
   return value.toLowerCase().trim().replace(/\s+/g, "-");
+}
+
+function escapeHtml(text) {
+  const s = String(text ?? "");
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function renderSavedJobsList() {
+  if (!savedJobsList) return;
+
+  const ids = [...savedJobs];
+
+  if (ids.length === 0) {
+    savedJobsList.innerHTML =
+      '<p class="saved-jobs-empty">No saved jobs yet. Save roles from the list with the Save button.</p>';
+    return;
+  }
+
+  if (jobs.length === 0) {
+    savedJobsList.innerHTML = '<p class="saved-jobs-empty">Loading jobs…</p>';
+    return;
+  }
+
+  const rows = ids
+    .map((id) => {
+      const job = jobs.find((j) => j.id === id);
+      if (!job) {
+        return `
+          <div class="saved-job-row saved-job-row--missing" data-job-id="${id}">
+            <p class="saved-job-missing-text">This listing (ID ${id}) is no longer available.</p>
+            <button type="button" class="ghost-btn saved-job-remove" data-job-id="${id}">Remove</button>
+          </div>`;
+      }
+      const meta = [job.type, job.location].filter(Boolean).join(" • ");
+      return `
+        <article class="saved-job-row" data-job-id="${job.id}">
+          <div class="saved-job-main">
+            <h3 class="saved-job-title">${escapeHtml(job.title)}</h3>
+            <p class="saved-job-company">${escapeHtml(job.company)}</p>
+            <p class="saved-job-meta">${escapeHtml(meta)}</p>
+          </div>
+          <div class="saved-job-actions">
+            <a href="job-details.html?id=${job.id}" class="ghost-btn">Details</a>
+            <button type="button" class="apply-btn saved-job-apply" data-job-id="${job.id}">Apply</button>
+            <button type="button" class="ghost-btn saved-job-remove" data-job-id="${job.id}">Remove</button>
+          </div>
+        </article>`;
+    })
+    .join("");
+
+  savedJobsList.innerHTML = rows;
+}
+
+function openSavedJobsModal() {
+  if (!savedJobsModal) return;
+  renderSavedJobsList();
+  savedJobsModal.hidden = false;
+  document.body.style.overflow = "hidden";
+  if (closeSavedJobsModalBtn) closeSavedJobsModalBtn.focus();
+}
+
+function closeSavedJobsModal() {
+  if (!savedJobsModal) return;
+  savedJobsModal.hidden = true;
+  if (!jobModal || jobModal.hidden) {
+    document.body.style.overflow = "";
+  }
+}
+
+if (savedJobsList) {
+  savedJobsList.addEventListener("click", (event) => {
+    const applyBtn = event.target.closest(".saved-job-apply");
+    if (applyBtn) {
+      event.preventDefault();
+      const id = Number(applyBtn.dataset.jobId);
+      const job = jobs.find((j) => j.id === id);
+      if (job) {
+        closeSavedJobsModal();
+        openJobModal(job);
+      }
+      return;
+    }
+
+    const removeBtn = event.target.closest(".saved-job-remove");
+    if (removeBtn) {
+      event.preventDefault();
+      const id = Number(removeBtn.dataset.jobId);
+      toggleSavedJob(id);
+      updateSavedCount();
+      renderSavedJobsList();
+      updateResults();
+      showToast("Removed from saved jobs");
+    }
+  });
+}
+
+if (savedJobsModal) {
+  savedJobsModal.addEventListener("click", (event) => {
+    if (event.target.closest("[data-close-saved-modal]")) closeSavedJobsModal();
+  });
+}
+
+if (closeSavedJobsModalBtn) {
+  closeSavedJobsModalBtn.addEventListener("click", closeSavedJobsModal);
 }
 
 function openJobModal(job) {
@@ -387,7 +683,9 @@ function openJobModal(job) {
 function closeJobModal() {
   if (!jobModal) return;
   jobModal.hidden = true;
-  document.body.style.overflow = "";
+  if (!savedJobsModal || savedJobsModal.hidden) {
+    document.body.style.overflow = "";
+  }
 }
 
 if (jobModal) {
@@ -401,7 +699,17 @@ if (closeJobModalBtn) {
 }
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && jobModal && !jobModal.hidden) closeJobModal();
+  if (event.key !== "Escape") return;
+  if (closeAllFilterDropdownsIfOpen()) return;
+  if (isUserMenuOpen()) {
+    closeUserMenu();
+    return;
+  }
+  if (savedJobsModal && !savedJobsModal.hidden) {
+    closeSavedJobsModal();
+    return;
+  }
+  if (jobModal && !jobModal.hidden) closeJobModal();
 });
 
 // ===== INIT =====
@@ -414,4 +722,6 @@ document.addEventListener("DOMContentLoaded", () => {
   setViewMode(currentView);
   toggleClearSearch();
   updateSavedCount();
+  initFilterDropdowns();
+  syncFilterDropdownLabels();
 });

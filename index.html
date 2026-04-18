@@ -8,11 +8,49 @@
   </head>
   <body>
     <header class="top-bar">
-      <div class="title-wrap">
-        <h1 class="site-title">Mini Job Board</h1>
-        <p class="site-subtitle">Discover modern opportunities and apply faster.</p>
+      <div class="top-bar-brand">
+        <div class="site-logo" aria-hidden="true">JB</div>
+        <div class="title-wrap">
+          <h1 class="site-title">Mini Job Board</h1>
+          <p class="site-subtitle">Discover modern opportunities and apply faster.</p>
+        </div>
       </div>
-      <button id="darkModeBtn" class="theme-toggle" aria-label="Toggle theme">Theme</button>
+      <div class="top-bar-spacer" aria-hidden="true"></div>
+      <div class="header-actions">
+        <div class="header-fake-nav" role="toolbar" aria-label="Demo navigation">
+          <button type="button" class="header-icon-btn" id="fakeHomeBtn" aria-label="Home (demo)">
+            <svg class="header-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-10.5z" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span class="header-icon-label">Home</span>
+          </button>
+          <button type="button" class="header-icon-btn" id="fakeNotifBtn" aria-label="Notifications (demo)">
+            <svg class="header-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0v1a3 3 0 11-6 0v-1" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span class="header-icon-label">Alerts</span>
+          </button>
+        </div>
+        <button id="darkModeBtn" class="theme-toggle header-theme" type="button" aria-label="Toggle theme">Dark</button>
+        <div class="header-account">
+          <button
+            type="button"
+            id="userMenuBtn"
+            class="user-avatar-btn"
+            aria-haspopup="menu"
+            aria-expanded="false"
+            aria-controls="userMenu"
+          >
+            <span class="user-avatar" aria-hidden="true">AC</span>
+          </button>
+          <div id="userMenu" class="user-menu" role="menu" aria-hidden="true">
+            <button type="button" role="menuitem" class="user-menu-item" data-action="profile">View Profile</button>
+            <button type="button" role="menuitem" class="user-menu-item" data-action="saved-jobs">Saved Jobs</button>
+            <button type="button" role="menuitem" class="user-menu-item" data-action="settings">Settings</button>
+            <button type="button" role="menuitem" class="user-menu-item" data-action="signout">Sign out</button>
+          </div>
+        </div>
+      </div>
     </header>
 
     <main class="page">
@@ -42,26 +80,89 @@
         </div>
 
         <div id="filtersPanel" class="filters-panel">
-          <select id="typeFilter">
-            <option value="all">All</option>
-            <option value="remote">Remote</option>
-            <option value="hybrid">Hybrid</option>
-            <option value="onsite">Onsite</option>
-          </select>
+          <div class="filter-dropdown">
+            <button
+              type="button"
+              class="filter-dropdown-trigger"
+              id="typeFilterBtn"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-controls="typeFilterList"
+            >
+              <span class="filter-dropdown-label">All</span>
+              <svg class="filter-dropdown-chevron" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+            <ul id="typeFilterList" class="filter-dropdown-panel" role="listbox" aria-hidden="true" tabindex="-1">
+              <li role="option" class="filter-dropdown-option" data-value="all">All</li>
+              <li role="option" class="filter-dropdown-option" data-value="remote">Remote</li>
+              <li role="option" class="filter-dropdown-option" data-value="hybrid">Hybrid</li>
+              <li role="option" class="filter-dropdown-option" data-value="onsite">Onsite</li>
+            </ul>
+            <select id="typeFilter" class="filter-select-native" tabindex="-1" aria-hidden="true">
+              <option value="all">All</option>
+              <option value="remote">Remote</option>
+              <option value="hybrid">Hybrid</option>
+              <option value="onsite">Onsite</option>
+            </select>
+          </div>
 
-          <select id="seniorityFilter">
-            <option value="all">All Levels</option>
-            <option value="junior">Junior</option>
-            <option value="semi-senior">Semi Senior</option>
-            <option value="senior">Senior</option>
-            <option value="trainee">Trainee</option>
-          </select>
+          <div class="filter-dropdown">
+            <button
+              type="button"
+              class="filter-dropdown-trigger"
+              id="seniorityFilterBtn"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-controls="seniorityFilterList"
+            >
+              <span class="filter-dropdown-label">All Levels</span>
+              <svg class="filter-dropdown-chevron" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+            <ul id="seniorityFilterList" class="filter-dropdown-panel" role="listbox" aria-hidden="true" tabindex="-1">
+              <li role="option" class="filter-dropdown-option" data-value="all">All Levels</li>
+              <li role="option" class="filter-dropdown-option" data-value="junior">Junior</li>
+              <li role="option" class="filter-dropdown-option" data-value="semi-senior">Semi Senior</li>
+              <li role="option" class="filter-dropdown-option" data-value="senior">Senior</li>
+              <li role="option" class="filter-dropdown-option" data-value="trainee">Trainee</li>
+            </ul>
+            <select id="seniorityFilter" class="filter-select-native" tabindex="-1" aria-hidden="true">
+              <option value="all">All Levels</option>
+              <option value="junior">Junior</option>
+              <option value="semi-senior">Semi Senior</option>
+              <option value="senior">Senior</option>
+              <option value="trainee">Trainee</option>
+            </select>
+          </div>
 
-          <select id="sortBy">
-            <option value="newest">Newest</option>
-            <option value="company-az">Company A-Z</option>
-            <option value="remote-first">Remote first</option>
-          </select>
+          <div class="filter-dropdown">
+            <button
+              type="button"
+              class="filter-dropdown-trigger"
+              id="sortByBtn"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-controls="sortByList"
+            >
+              <span class="filter-dropdown-label">Newest</span>
+              <svg class="filter-dropdown-chevron" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+            <ul id="sortByList" class="filter-dropdown-panel" role="listbox" aria-hidden="true" tabindex="-1">
+              <li role="option" class="filter-dropdown-option" data-value="newest">Newest</li>
+              <li role="option" class="filter-dropdown-option" data-value="company-az">Company A-Z</li>
+              <li role="option" class="filter-dropdown-option" data-value="remote-first">Remote first</li>
+            </ul>
+            <select id="sortBy" class="filter-select-native" tabindex="-1" aria-hidden="true">
+              <option value="newest">Newest</option>
+              <option value="company-az">Company A-Z</option>
+              <option value="remote-first">Remote first</option>
+            </select>
+          </div>
 
           <button id="clearFilters" class="clear-filters">Clear Filters</button>
         </div>
@@ -101,6 +202,22 @@
   <a id="jobModalDetailsLink" href="#">Open full details page</a>
   </div>
   </div>
+
+    <div id="savedJobsModal" class="job-modal saved-jobs-modal" hidden>
+      <div class="job-modal-backdrop" data-close-saved-modal></div>
+      <div
+        class="job-modal-content saved-jobs-modal-inner"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="savedJobsModalTitle"
+      >
+        <button type="button" class="job-modal-close" id="closeSavedJobsModal" aria-label="Close saved jobs">
+          ×
+        </button>
+        <h2 id="savedJobsModalTitle" class="saved-jobs-modal-title">Saved jobs</h2>
+        <div id="savedJobsList" class="saved-jobs-list"></div>
+      </div>
+    </div>
 
     <script src="app.js" defer></script>
 

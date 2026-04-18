@@ -5,7 +5,29 @@
     "company": "CodeWave",
     "type": "Remote",
     "location": "LATAM",
-    "seniority": "Semi-Senior"
+    "seniority": "Semi-Senior",
+    "employment": "Full-time",
+    "salary": "$4k–6k USD / month",
+    "description": "We're scaling our product team and looking for a fullstack engineer who enjoys ownership end to end—from API design to polished UI. You'll join a fully distributed crew across LATAM with async-friendly rituals, code review culture, and room to influence architecture.",
+    "responsibilities": [
+      "Design and implement features in NestJS services and PostgreSQL, with attention to migrations and performance.",
+      "Build and maintain React features with TypeScript, shared hooks, and accessible components.",
+      "Partner with product and design in discovery; break work into shippable increments with clear acceptance criteria.",
+      "Write automated tests (unit, integration, e2e where it pays off) and participate in on-call rotations lightly.",
+      "Contribute to our internal component library and API style guides so patterns stay consistent."
+    ],
+    "requirements": [
+      "4+ years shipping web applications; solid TypeScript on both client and server.",
+      "Experience with relational databases, migrations, and honest error handling in production.",
+      "Comfortable with GitHub Flow, CI, and reviewing others' code with constructive feedback.",
+      "English or Spanish for async written communication; overlap with team hours in Americas time zones."
+    ],
+    "benefits": [
+      "Remote-first stipend for coworking and home office setup",
+      "Health coverage options and annual learning budget",
+      "Flexible PTO and company-wide recharge weeks",
+      "Equity participation depending on level and location"
+    ]
   },
   {
     "id": 4,
@@ -13,7 +35,28 @@
     "company": "Cloud Delta",
     "type": "Onsite",
     "location": "Mexico",
-    "seniority": "Trainee"
+    "seniority": "Trainee",
+    "employment": "Full-time",
+    "salary": "$1.8k–2.4k USD / month",
+    "description": "Start your career in production systems with structured mentorship. You'll rotate through API development, observability, and database topics while shipping real changes to our customer-facing stack.",
+    "responsibilities": [
+      "Implement features and fixes in Node services under review from senior engineers.",
+      "Learn to operate dashboards for logs, metrics, and traces; participate in incident retros.",
+      "Write tests and documentation so the next person understands your decisions.",
+      "Pair frequently in the first months; gradually take solo ownership of small vertical slices."
+    ],
+    "requirements": [
+      "Computer science coursework or bootcamp plus personal or academic projects using JavaScript or Python.",
+      "Curiosity about HTTP APIs, SQL basics, and how deployments reach users.",
+      "Willingness to work onsite in our Mexico City office with hybrid flexibility after ramp-up.",
+      "Legally authorized to work in Mexico."
+    ],
+    "benefits": [
+      "Mentorship program and dedicated learning days",
+      "Meals and transit support where applicable",
+      "Health insurance after probation",
+      "Clear growth path toward mid-level roles"
+    ]
   },
   {
     "id": 11,
@@ -21,7 +64,57 @@
     "company": "ScaleUp Corp",
     "type": "Remote",
     "location": "Global",
-    "seniority": "Senior"
+    "seniority": "Senior",
+    "employment": "Full-time",
+    "salary": "$6k–9k USD / month",
+    "description": "Our web app serves millions of sessions; performance, accessibility, and maintainability are the product. You'll set the bar for how we load data, structure routes, and ship UI that works for everyone.",
+    "responsibilities": [
+      "Own complex flows in React—routing, caching, and optimistic updates with clear failure modes.",
+      "Drive Core Web Vitals and a11y fixes across squads; partner with design on tokens and motion.",
+      "Mentor engineers through design docs, pairing, and crisp code review.",
+      "Represent frontend in technical planning; flag risk early and propose incremental mitigations."
+    ],
+    "requirements": [
+      "6+ years of frontend engineering including large SPAs or hybrid SSR stacks.",
+      "Deep React experience and pragmatism about state and server data boundaries.",
+      "Demonstrated accessibility mindset (semantic HTML, keyboard flows, tooling).",
+      "Strong written communication for distributed collaboration."
+    ],
+    "benefits": [
+      "Global remote with regionally competitive compensation",
+      "Annual conference and tooling budget",
+      "Parental leave and flexible scheduling",
+      "Stock options"
+    ]
+  },
+  {
+    "id": 31,
+    "title": "Product Designer",
+    "company": "ScaleUp Corp",
+    "type": "Hybrid",
+    "location": "Global",
+    "seniority": "Senior",
+    "employment": "Full-time",
+    "salary": "$5k–7k USD / month",
+    "description": "You'll shape end-to-end journeys from problem framing to polished UI, working shoulder-to-shoulder with PM and engineering. We value systems thinking, crisp documentation, and validation with real usage data.",
+    "responsibilities": [
+      "Lead discovery for major initiatives—interviews, journey maps, and lightweight prototyping.",
+      "Produce and maintain Figma libraries aligned with engineering components.",
+      "Run usability tests and translate findings into iterative improvements.",
+      "Facilitate workshops that align stakeholders without endless meetings."
+    ],
+    "requirements": [
+      "5+ years in product or UX design for digital products; portfolio with shipped work.",
+      "Comfortable facilitating research and presenting trade-offs with evidence.",
+      "Experience collaborating with engineers on accessible, responsive implementations.",
+      "Fluency in English; second languages a plus for our global users."
+    ],
+    "benefits": [
+      "Hybrid studio days where hubs exist; remote otherwise",
+      "Design tooling budget (Figma, research tools)",
+      "Wellness stipend and generous PTO",
+      "Stock options"
+    ]
   },
   {
     "id": 8,
@@ -29,7 +122,28 @@
     "company": "WebWorks",
     "type": "Remote",
     "location": "Brazil",
-    "seniority": "Semi-Senior"
+    "seniority": "Semi-Senior",
+    "employment": "Full-time",
+    "salary": "$3.5k–5k USD / month",
+    "description": "Join a product squad shipping weekly. We favor small PRs, trunk-based development, and instrumentation so we know when something breaks before users tell us.",
+    "responsibilities": [
+      "Deliver customer-facing flows in React 18 with TanStack Query and a growing design system.",
+      "Collaborate on API contracts with backend peers; handle edge cases in the UI honestly.",
+      "Improve test coverage and storybook examples for tricky components.",
+      "Participate in squad rituals: planning, retro, and occasional production support."
+    ],
+    "requirements": [
+      "3+ years with React in production; TypeScript strongly preferred.",
+      "Solid understanding of async data, caching, and error states in SPAs.",
+      "Experience with Git-based workflows and CI pipelines.",
+      "Based in Brazil or aligned time zones for synchronous collaboration."
+    ],
+    "benefits": [
+      "100% remote with internet stipend",
+      "Local benefits package compliant with Brazilian labor practice",
+      "Learning budget for courses and certifications",
+      "Team offsites in LATAM"
+    ]
   },
   {
     "id": 22,
@@ -37,126 +151,85 @@
     "company": "InfraCloud",
     "type": "Hybrid",
     "location": "Spain",
-    "seniority": "Semi-Senior"
-  },
-  {
-    "id": 1,
-    "title": "Frontend Developer",
-    "company": "Startup Alpha",
-    "type": "Remote",
-    "location": "LATAM",
-    "seniority": "Junior"
-  },
-  {
-    "id": 16,
-    "title": "Frontend Trainee",
-    "company": "Learning Tech",
-    "type": "Onsite",
-    "location": "Argentina",
-    "seniority": "Trainee"
-  },
-  {
-    "id": 23,
-    "title": "Software Engineer",
-    "company": "BlueRocket Tech",
-    "type": "Onsite",
-    "location": "Colombia",
-    "seniority": "Semi-Senior"
-  },
-  {
-    "id": 12,
-    "title": "Senior Fullstack Engineer",
-    "company": "Enterprise Labs",
-    "type": "Hybrid",
-    "location": "Argentina",
-    "seniority": "Senior"
-  },
-  {
-    "id": 6,
-    "title": "Software Developer",
-    "company": "NextGen Solutions",
-    "type": "Hybrid",
-    "location": "Colombia",
-    "seniority": "Junior"
-  },
-  {
-    "id": 24,
-    "title": "Frontend Developer",
-    "company": "PixelCraft Studio",
-    "type": "Remote",
-    "location": "Portugal",
-    "seniority": "Semi-Senior"
-  },
-  {
-    "id": 3,
-    "title": "Frontend Developer",
-    "company": "Dev Games",
-    "type": "Remote",
-    "location": "Global",
-    "seniority": "Trainee"
-  },
-  {
-    "id": 18,
-    "title": "Junior Software Developer",
-    "company": "Bright Solutions",
-    "type": "Hybrid",
-    "location": "Chile",
-    "seniority": "Junior"
-  },
-  {
-    "id": 13,
-    "title": "Backend Engineer",
-    "company": "InfraTech",
-    "type": "Onsite",
-    "location": "USA",
-    "seniority": "Semi-Senior"
-  },
-  {
-    "id": 25,
-    "title": "JavaScript Developer",
-    "company": "DevRoot",
-    "type": "Hybrid",
-    "location": "Uruguay",
-    "seniority": "Semi-Senior"
-  },
-  {
-    "id": 9,
-    "title": "Frontend Engineer",
-    "company": "TechNova",
-    "type": "Hybrid",
-    "location": "Uruguay",
-    "seniority": "Semi-Senior"
+    "seniority": "Semi-Senior",
+    "employment": "Full-time",
+    "salary": "€55k–72k gross / year",
+    "description": "Our platform team builds the services that power real-time analytics for enterprise customers. You'll work on Go microservices, streaming pipelines, and careful data modeling where correctness matters.",
+    "responsibilities": [
+      "Design and implement Go services with clear APIs and observability hooks.",
+      "Operate Kafka (or similar) pipelines with backpressure and replay in mind.",
+      "Evolve PostgreSQL schemas with zero-downtime migration discipline.",
+      "Share on-call with strong runbooks; learn from incidents, not blame."
+    ],
+    "requirements": [
+      "4+ years backend development; strong Go or willingness to ramp quickly with similar experience.",
+      "Experience with distributed systems concepts: at-least-once delivery, idempotency, partitions.",
+      "Comfortable in Linux environments, containers, and Kubernetes basics.",
+      "Professional working English; hybrid presence in Spain as agreed with your team."
+    ],
+    "benefits": [
+      "Competitive salary and flexible remuneration (Spain)",
+      "Health insurance and pension contributions",
+      "Learning budget and conference attendance",
+      "Modern office days optional in Madrid"
+    ]
   },
   {
     "id": 15,
-    "title": "Software Engineer",
-    "company": "Data Systems",
-    "type": "Hybrid",
-    "location": "Canada",
-    "seniority": "Senior"
-  },
-  {
-    "id": 2,
-    "title": "Web Developer",
-    "company": "Tech Beta",
-    "type": "Hybrid",
-    "location": "Argentina",
-    "seniority": "Junior"
-  },
-  {
-    "id": 20,
-    "title": "Frontend Engineer",
-    "company": "UX Factory",
-    "type": "Onsite",
-    "location": "Germany",
-    "seniority": "Semi-Senior"
-  },
-  {
-    "id": 19,
-    "title": "Senior Backend Engineer",
-    "company": "HighLoad Systems",
+    "title": "DevOps Engineer",
+    "company": "InfraCloud",
     "type": "Remote",
-    "location": "USA",
-    "seniority": "Senior"
+    "location": "EU",
+    "seniority": "Senior",
+    "employment": "Full-time",
+    "salary": "€65k–80k gross / year",
+    "description": "We make deployments boring—in a good way. You'll harden CI/CD, codify infrastructure, and make observability actionable so teams can move fast without breaking trust with customers.",
+    "responsibilities": [
+      "Own GitHub Actions pipelines and artifact promotion strategies across environments.",
+      "Maintain Terraform modules for AWS footprint; review changes with platform peers.",
+      "Roll out OpenTelemetry standards and dashboards that teams actually use.",
+      "Partner with product engineering on safe releases: flags, canaries, rollbacks."
+    ],
+    "requirements": [
+      "5+ years in platform, SRE, or DevOps roles with cloud-native stacks.",
+      "Strong Terraform and AWS experience; IaC review habits.",
+      "Solid scripting (Python, Bash, or Go) for glue and automation.",
+      "EU timezone alignment; occasional travel for team summits."
+    ],
+    "benefits": [
+      "Remote across EU with coworking allowance",
+      "Top-tier hardware and on-call compensation where applicable",
+      "Annual training budget and certification support",
+      "Flexible PTO and parental policies"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Data Analyst",
+    "company": "Insight Lab",
+    "type": "Onsite",
+    "location": "Argentina",
+    "seniority": "Junior",
+    "employment": "Full-time",
+    "salary": "$2k–2.8k USD / month",
+    "description": "Help teams see the story in their numbers. You'll build dashboards, defend metric definitions, and dig into SQL when executives ask questions that don't fit a template.",
+    "responsibilities": [
+      "Maintain BI dashboards; ensure filters and definitions match business intent.",
+      "Write clear SQL for ad-hoc analysis; document assumptions so numbers are reproducible.",
+      "Partner with ops and product to improve event tracking and data quality.",
+      "Present insights succinctly; visualize so stakeholders grasp trade-offs quickly."
+    ],
+    "requirements": [
+      "1–3 years in analytics or a strong analytical degree with internship experience.",
+      "Proficiency in SQL; exposure to a major BI stack (Looker, Tableau, Power BI, or similar).",
+      "Comfort with spreadsheets, basic statistics, and sanity-checking outliers.",
+      "Spanish professional proficiency; Buenos Aires onsite with hybrid options."
+    ],
+    "benefits": [
+      "Health plan and meal allowances per local norms",
+      "Training in SQL and modern BI tooling",
+      "Career path toward data science or analytics engineering",
+      "Flexible hours around core collaboration windows"
+    ]
   }
 ]

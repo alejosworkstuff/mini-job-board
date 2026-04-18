@@ -1,19 +1,182 @@
 <!DOCTYPE html>
-<html lang=en>
-    <head>
-    <meta charset="UTF-8">
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Job Details</title>
+    <meta
+      name="description"
+      content="Job listing on Mini Job Board — open roles, types, and how to apply."
+    />
+    <meta property="og:title" content="Job details · Mini Job Board" />
+    <meta
+      property="og:description"
+      content="View role details, save for later, and apply on Mini Job Board."
+    />
+    <title>Job details · Mini Job Board</title>
     <link rel="stylesheet" href="styles.css" />
-</head>
+  </head>
+  <body>
+    <header class="top-bar">
+      <div class="top-bar-brand">
+        <div class="site-logo" aria-hidden="true">JB</div>
+        <div class="title-wrap">
+          <p class="site-title">Mini Job Board</p>
+          <p class="site-subtitle">Discover modern opportunities and apply faster.</p>
+        </div>
+      </div>
+      <div class="top-bar-spacer" aria-hidden="true"></div>
+      <div class="header-actions">
+        <div class="header-fake-nav" role="toolbar" aria-label="Demo navigation">
+          <button type="button" class="header-icon-btn" id="fakeHomeBtn" aria-label="Home (demo)">
+            <svg class="header-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-10.5z" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span class="header-icon-label">Home</span>
+          </button>
+          <button type="button" class="header-icon-btn" id="fakeNotifBtn" aria-label="Notifications (demo)">
+            <svg class="header-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0v1a3 3 0 11-6 0v-1" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span class="header-icon-label">Alerts</span>
+          </button>
+        </div>
+        <button id="darkModeBtn" class="theme-toggle header-theme" type="button" aria-label="Toggle theme">Dark</button>
+        <div class="header-account">
+          <button
+            type="button"
+            id="userMenuBtn"
+            class="user-avatar-btn"
+            aria-haspopup="menu"
+            aria-expanded="false"
+            aria-controls="userMenu"
+          >
+            <span class="user-avatar" aria-hidden="true">AC</span>
+          </button>
+          <div id="userMenu" class="user-menu" role="menu" aria-hidden="true">
+            <button type="button" role="menuitem" class="user-menu-item" data-action="profile">View Profile</button>
+            <button type="button" role="menuitem" class="user-menu-item" data-action="saved-jobs">Saved Jobs</button>
+            <button type="button" role="menuitem" class="user-menu-item" data-action="settings">Settings</button>
+            <button type="button" role="menuitem" class="user-menu-item" data-action="signout">Sign out</button>
+          </div>
+        </div>
+      </div>
+    </header>
 
-<body>
-    <main class="page">
-        <a href="index.html">← Back to Home</a>
-        <div id="job-details"></div>
-        <p id="job-not-found" hidden>Job not found.</p>
+    <header class="job-details-top">
+      <div class="job-details-top-row">
+        <a class="back-to-board" href="index.html">← All jobs</a>
+        <div class="job-details-top-actions">
+          <button id="shareJobBtn" type="button" class="ghost-btn job-details-share" aria-label="Copy link to this job">
+            Share
+          </button>
+        </div>
+      </div>
+      <div id="detailHero" class="job-details-hero" hidden>
+        <div class="job-details-hero-text">
+          <h1 id="detailTitle" class="job-details-title"></h1>
+          <p id="detailCompany" class="job-details-company"></p>
+          <div id="detailChips" class="job-details-chips"></div>
+        </div>
+        <div class="job-details-hero-actions">
+          <button type="button" id="detailApplyBtn" class="apply-btn">Apply now</button>
+          <button
+            type="button"
+            id="detailSaveBtn"
+            class="save-job-btn is-details-save"
+            aria-label="Save job"
+            aria-pressed="false"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="page job-details-main">
+      <div id="detailLoading" class="job-details-state">
+        <p class="job-details-state-text">Loading listing…</p>
+      </div>
+      <div id="detailNotFound" class="job-details-state" hidden>
+        <h2 class="job-details-not-found-title">Job not found</h2>
+        <p class="job-details-state-text">This listing may have been removed or the link is incorrect.</p>
+        <a class="apply-btn" href="index.html">Back to all jobs</a>
+      </div>
+      <article id="detailArticle" class="job-details-article" hidden>
+        <div class="job-details-body">
+          <h2 class="job-details-section-title">About this role</h2>
+          <div id="detailAboutInner" class="job-details-about-inner"></div>
+        </div>
+        <section id="relatedSection" class="job-details-related" aria-labelledby="relatedHeading" hidden>
+          <h2 id="relatedHeading" class="job-details-section-title">Related listings</h2>
+          <ul id="relatedList" class="job-details-related-list"></ul>
+        </section>
+      </article>
     </main>
 
+    <div id="toast" class="toast" aria-live="polite" aria-atomic="true"></div>
+
+    <div id="jobModal" class="job-modal" hidden>
+      <div class="job-modal-backdrop" data-close-modal></div>
+      <div class="job-modal-content" role="dialog" aria-modal="true" aria-labelledby="jobModalTitle">
+        <button type="button" class="job-modal-close" id="closeJobModal" aria-label="Close">×</button>
+        <h2 id="jobModalTitle">Job Title</h2>
+        <p id="jobModalCompany">Company</p>
+        <p id="jobModalMeta">Type • Location • Seniority</p>
+        <p id="jobModalDescription">Job description will appear here.</p>
+        <p class="job-modal-details-note">You’re already on the full details page.</p>
+      </div>
+    </div>
+
+    <div id="savedJobsModal" class="job-modal saved-jobs-modal" hidden>
+      <div class="job-modal-backdrop" data-close-saved-modal></div>
+      <div
+        class="job-modal-content saved-jobs-modal-inner"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="savedJobsModalTitle"
+      >
+        <button type="button" class="job-modal-close" id="closeSavedJobsModal" aria-label="Close saved jobs">
+          ×
+        </button>
+        <h2 id="savedJobsModalTitle" class="saved-jobs-modal-title">Saved jobs</h2>
+        <div id="savedJobsList" class="saved-jobs-list"></div>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <a
+          class="footer-link portfolio-link"
+          href="https://alejosworkstuff.github.io/portfolio/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Portfolio
+        </a>
+        <a
+          class="social-bubble social-github"
+          href="https://github.com/alejosworkstuff"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="GitHub Profile"
+          title="GitHub"
+        >
+          <img src="./assets/icons/github.svg" alt="" class="social-icon" />
+        </a>
+        <a
+          class="social-bubble social-linkedin"
+          href="https://www.linkedin.com/in/alejo-castillo-0b02b73b0/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="LinkedIn Profile"
+          title="LinkedIn"
+        >
+          <img src="./assets/icons/linkedin.svg" alt="" class="social-icon" />
+        </a>
+      </div>
+    </footer>
+
+    <script src="site-header.js" defer></script>
     <script src="job-details.js" defer></script>
-</body>
+  </body>
 </html>
