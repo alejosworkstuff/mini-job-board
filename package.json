@@ -1,0 +1,11 @@
+{
+  "name": "mini-job-board",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Frontend job board with filtering, state handling, and persistent UI preferences.",
+  "scripts": {
+    "check:syntax": "node --check app.js && node --check job-details.js && node --check saved-jobs.js && node --check site-header.js",
+    "check:data": "node scripts/validate-jobs.mjs",
+    "ci": "npm run check:syntax && npm run check:data"
+  }
+}

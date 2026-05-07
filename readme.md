@@ -1,98 +1,133 @@
 # Mini Job Board
 
-A frontend application that simulates a real-world job board with dynamic data handling, filtering logic, UI state management, and theme persistence.
+A frontend job board application built with vanilla JavaScript that simulates real hiring-platform workflows: searching, filtering, sorting, saved jobs, view preferences, and detail pages.
 
-This project focuses on building practical frontend skills using vanilla JavaScript without frameworks.
-
----
+This project is part of my portfolio focus on production-style frontend engineering without framework abstractions.
 
 ## Live Demo
 
 [View Live Demo](https://alejosworkstuff.github.io/mini-job-board/)
 
-## Project Goals
+---
 
-- Work with dynamic JSON data
-- Implement real-time search and filtering logic
-- Manage UI state without frameworks
-- Persist user preferences using localStorage
-- Build a clean and responsive interface
+## Problem and Context
 
-## Features
+Most junior frontend demos only show static UIs. I wanted to build a project that demonstrates interaction-heavy product behavior: dynamic data rendering, multiple filter combinations, UI state persistence, and clear handling for edge cases like empty results.
 
-- Dynamic job rendering from external JSON file
+## My Role
+
+- Designed and implemented the full frontend architecture
+- Created the data flow and filter logic in vanilla JS
+- Built reusable UI behavior patterns (dropdowns, modals, toasts, view modes)
+- Implemented persisted preferences via localStorage
+
+## Architecture Overview
+
+- `index.html` / `styles.css`: layout, styles, and responsive behavior
+- `app.js`: main listing flow, filters, search, sorting, pagination-like loading, saved jobs state
+- `job-details.js`: detail page rendering for selected jobs
+- `saved-jobs.js`: saved jobs page behavior
+- `site-header.js`: shared header/menu interactions
+- `data/jobs.json`: source data used to simulate API-like job records
+
+### Data Flow
+
+1. Load `data/jobs.json`
+2. Keep original data in memory
+3. Apply user inputs (search + filters + sort)
+4. Render visible jobs and result counters
+5. Persist view/theme/saved-job preferences in localStorage
+
+---
+
+## Key Features
+
 - Real-time search by title and company
-- Multi-filter system (type + seniority)
-- Graceful empty state handling
-- Dark mode with persistence
-- Responsive layout
-- Visual seniority badges for quick scanning
+- Multi-filter controls (type, seniority) with sorting
+- Saved jobs behavior and modal/list workflows
+- Job detail view with richer content
+- Empty-state handling with fast reset actions
+- Theme/view persistence (dark mode and grid/list)
+- Responsive layout for smaller screens
 
-## Technical Concepts Applied
+## Technical Decisions and Tradeoffs
 
-- DOM manipulation
-- Array filtering & chaining
-- Event handling
-- Conditional rendering
-- LocalStorage API
-- Separation of concerns (data / logic / UI)
-- Clean folder structure
+- **Vanilla JS first:** chosen to prove strong core DOM/event/state skills before relying on frameworks.
+- **JSON-based data source:** faster to iterate during UI and logic development than introducing backend complexity.
+- **LocalStorage for persistence:** practical for UX continuity, while accepting that this is device-local and non-user-account based.
+- **Single-repo static architecture:** ideal for learning and speed, with clear future path to API + auth separation.
+
+---
+
+## CI / Quality Baseline
+
+This project includes a GitHub Actions CI workflow that runs on push and pull requests:
+
+- JavaScript syntax checks for core scripts
+- Data schema validation for `data/jobs.json` (required fields, unique IDs, and non-empty arrays)
+
+Run locally:
+
+```bash
+npm install
+npm run ci
+```
+
+---
 
 ## Tech Stack
 
 - HTML5
 - CSS3
 - Vanilla JavaScript (ES6+)
+- GitHub Actions (CI)
+- Node.js (quality scripts)
 
 ## Project Structure
 
 ```text
 mini-job-board/
-│
-├── data/
-│   └── jobs.json
+├── .github/workflows/ci.yml
 ├── assets/
-│   └── screenshots/
+├── data/jobs.json
+├── scripts/validate-jobs.mjs
+├── app.js
+├── job-details.js
+├── saved-jobs.js
+├── site-header.js
 ├── index.html
+├── job-details.html
+├── saved-jobs.html
 ├── styles.css
-└── app.js
+└── package.json
 ```
 
-## How to Run Locally
-
-1. Clone the repository:
+## Local Setup
 
 ```bash
 git clone https://github.com/alejosworkstuff/mini-job-board.git
 cd mini-job-board
+npm install
+npm run ci
 ```
 
-Then:
- Open `index.html` using Live Server or your browser.
+Then open `index.html` with Live Server (recommended) or a local static server.
 
-## Data Model
+---
 
-Each job object includes:
+## Case Study Highlights (Portfolio Use)
 
-- `id`
-- `title`
-- `company`
-- `type` (Remote | Hybrid | Onsite)
-- `location`
-- `seniority` (Junior | Semi-Senior | Senior | Trainee)
+- **Challenge:** Combine search, filters, sorting, and persisted preferences without framework state tools.
+- **Approach:** Keep source-of-truth data in memory and derive UI from controlled filtering/sorting pipelines.
+- **Result:** A realistic, interaction-heavy interface with clean empty states and reusable UX patterns.
 
-## Screenshots
+## What I Would Improve Next
 
-(Add screenshots here if available)
-
-## Future Improvements
-
-- Pagination
-- Sorting by date
-- Backend integration (API)
-- Authentication simulation
-- Save jobs feature
+- Move data access to an API layer (pagination and server-side filtering)
+- Add unit/integration/e2e automated tests
+- Add accessibility audit and targeted fixes
+- Add deployment previews and release notes workflow
 
 ## License
 
-MIT License
+MIT
