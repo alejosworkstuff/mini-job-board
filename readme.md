@@ -66,6 +66,8 @@ This project includes a GitHub Actions CI workflow that runs on push and pull re
 - JavaScript syntax checks for core scripts
 - Data schema validation for `data/jobs.json` (required fields, unique IDs, and non-empty arrays)
 
+Note: the CI workflow is fully configured. If GitHub Actions appears as "not started," it may be due to temporary account billing restrictions on hosted runners; the same checks still run locally via `npm run ci`.
+
 Run locally:
 
 ```bash

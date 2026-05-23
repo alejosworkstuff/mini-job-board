@@ -303,6 +303,27 @@ body.dark .user-menu-item:last-child {
 }
 
 @media (max-width: 720px) {
+  .top-bar {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .top-bar-brand {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .top-bar-spacer {
+    display: none;
+  }
+
+  .header-actions {
+    flex: 1 1 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+
   .header-fake-nav {
     gap: 0;
   }
@@ -1098,6 +1119,26 @@ body.dark .user-avatar-btn {
   100% {
     transform: translateY(0) scale(1.01);
     filter: blur(2px) saturate(125%);
+  }
+}
+
+@media (max-width: 400px) {
+  body {
+    padding: 14px 12px 124px;
+  }
+
+  .top-bar {
+    padding: 12px 14px;
+  }
+
+  .header-theme {
+    min-width: 64px;
+    padding: 0 10px;
+    font-size: 0.75rem;
+  }
+
+  .filter-dropdown-panel {
+    max-height: min(50vh, 240px);
   }
 }
 

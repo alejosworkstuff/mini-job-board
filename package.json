@@ -6,6 +6,7 @@
   "scripts": {
     "check:syntax": "node --check app.js && node --check job-details.js && node --check saved-jobs.js && node --check site-header.js",
     "check:data": "node scripts/validate-jobs.mjs",
-    "ci": "npm run check:syntax && npm run check:data"
+    "test": "node --test tests/*.mjs",
+    "ci": "npm run check:syntax && npm run check:data && npm run test"
   }
 }
