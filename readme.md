@@ -1,72 +1,96 @@
 # Mini Job Board
 
-A frontend job board application built with vanilla JavaScript that simulates real hiring-platform workflows: searching, filtering, sorting, saved jobs, view preferences, and detail pages.
+A frontend job board built with vanilla JavaScript that simulates hiring-platform workflows: search, multi-filter, sorting, saved jobs, job modals, detail pages, and persisted UI preferences (theme and grid/list view).
 
 This project is part of my portfolio focus on production-style frontend engineering without framework abstractions.
 
-## Live Demo
-
-[View Live Demo](https://alejosworkstuff.github.io/mini-job-board/)
+**Live:** [alejosworkstuff.github.io/mini-job-board](https://alejosworkstuff.github.io/mini-job-board/)  
+**Repo:** [github.com/alejosworkstuff/mini-job-board](https://github.com/alejosworkstuff/mini-job-board)
 
 ---
 
 ## Problem and Context
 
-Most junior frontend demos only show static UIs. I wanted to build a project that demonstrates interaction-heavy product behavior: dynamic data rendering, multiple filter combinations, UI state persistence, and clear handling for edge cases like empty results.
+Most junior frontend demos only show static UIs. I wanted interaction-heavy product behavior: dynamic rendering, combined filters, persistence, empty states, and multi-page flows without React or a build step.
 
 ## My Role
 
 - Designed and implemented the full frontend architecture
-- Created the data flow and filter logic in vanilla JS
-- Built reusable UI behavior patterns (dropdowns, modals, toasts, view modes)
-- Implemented persisted preferences via localStorage
+- Built filter/search/sort logic in shared modules (`scripts/filter-logic.mjs`)
+- Implemented saved jobs, modals, detail pages, and header/menu UX
+- Added automated tests for filter logic and CI for syntax + data validation
 
 ## Architecture Overview
 
-- `index.html` / `styles.css`: layout, styles, and responsive behavior
-- `app.js`: main listing flow, filters, search, sorting, pagination-like loading, saved jobs state
-- `job-details.js`: detail page rendering for selected jobs
-- `saved-jobs.js`: saved jobs page behavior
-- `site-header.js`: shared header/menu interactions
-- `data/jobs.json`: source data used to simulate API-like job records
+```text
+mini-job-board/
+├── index.html           # Main listing page
+├── job-details.html     # Full job detail page
+├── saved-jobs.html      # Saved jobs page
+├── app.js               # Listing: search, filters, sort, pagination, modals
+├── job-details.js       # Detail page logic
+├── saved-jobs.js        # Saved jobs page logic
+├── site-header.js       # Shared header (theme, menu) on secondary pages
+├── styles.css           # Layout, dark mode, modals, responsive rules
+├── data/jobs.json       # Job records (local data source)
+├── scripts/
+│   ├── filter-logic.mjs      # Pure filter/sort helpers (tested)
+│   └── validate-jobs.mjs     # JSON schema validation for CI
+├── tests/
+│   └── filter-logic.test.mjs # Node test runner
+└── .github/workflows/ci.yml
+```
 
 ### Data Flow
 
 1. Load `data/jobs.json`
-2. Keep original data in memory
-3. Apply user inputs (search + filters + sort)
-4. Render visible jobs and result counters
-5. Persist view/theme/saved-job preferences in localStorage
+2. Keep source data in memory
+3. Apply search text, type/seniority filters, and sort order
+4. Render jobs (grid or list) with optional “load more” batching
+5. Persist theme, view mode, and saved job IDs in `localStorage`
 
 ---
 
 ## Key Features
 
-- Real-time search by title and company
-- Multi-filter controls (type, seniority) with sorting
-- Saved jobs behavior and modal/list workflows
-- Job detail view with richer content
-- Empty-state handling with fast reset actions
-- Theme/view persistence (dark mode and grid/list)
-- Responsive layout for smaller screens
+- Real-time search across title, company, and location
+- Multi-filter controls (job type, seniority) with active-filter badge
+- Sorting (e.g. newest, title, company)
+- **Saved jobs** with count, modal list, and dedicated `saved-jobs.html` page
+- **Job detail modal** on the listing page plus full **job-details.html**
+- Empty-state handling with quick reset
+- **Dark mode** toggle with `localStorage` persistence
+- **Grid / list** view toggle with persistence
+- Collapsible filters panel on smaller viewports
+- Toast notifications and lightweight user menu (demo UX)
+- Responsive layout and fixed footer with portfolio/GitHub links
 
 ## Technical Decisions and Tradeoffs
 
-- **Vanilla JS first:** chosen to prove strong core DOM/event/state skills before relying on frameworks.
-- **JSON-based data source:** faster to iterate during UI and logic development than introducing backend complexity.
-- **LocalStorage for persistence:** practical for UX continuity, while accepting that this is device-local and non-user-account based.
-- **Single-repo static architecture:** ideal for learning and speed, with clear future path to API + auth separation.
+- **Vanilla JS first** — proves DOM, events, and state without framework abstractions.
+- **JSON data source** — fast iteration; no backend required for the demo.
+- **Shared filter module** — logic is testable independently of the DOM.
+- **localStorage** — device-local persistence; no user accounts.
+- **Static hosting** — ideal for GitHub Pages; clear path to a real API later.
+
+---
+
+## Tech Stack
+
+- HTML5, CSS3
+- Vanilla JavaScript (ES modules in tests; classic scripts in pages)
+- Node.js (syntax checks, data validation, tests)
+- GitHub Actions (CI)
 
 ---
 
 ## CI / Quality Baseline
 
-This project includes a GitHub Actions CI workflow that runs on push and pull requests:
+GitHub Actions (`.github/workflows/ci.yml`) on pull requests and pushes to `main`:
 
-- JavaScript syntax checks for core scripts
-- Data schema validation for `data/jobs.json` (required fields, unique IDs, and non-empty arrays)
-
-Note: the CI workflow is fully configured. If GitHub Actions appears as "not started," it may be due to temporary account billing restrictions on hosted runners; the same checks still run locally via `npm run ci`.
+- JavaScript syntax checks (`npm run check:syntax`) for `app.js`, `job-details.js`, `saved-jobs.js`, `site-header.js`
+- Data validation (`npm run check:data`) — required fields, unique IDs, non-empty arrays in `data/jobs.json`
+- Unit tests (`npm run test`) — `tests/filter-logic.test.mjs` via `node --test`
 
 Run locally:
 
@@ -75,34 +99,16 @@ npm install
 npm run ci
 ```
 
+### npm Scripts
+
+| Script | Command |
+|--------|---------|
+| `check:syntax` | `node --check` on core JS files |
+| `check:data` | `node scripts/validate-jobs.mjs` |
+| `test` | `node --test tests/*.mjs` |
+| `ci` | All of the above |
+
 ---
-
-## Tech Stack
-
-- HTML5
-- CSS3
-- Vanilla JavaScript (ES6+)
-- GitHub Actions (CI)
-- Node.js (quality scripts)
-
-## Project Structure
-
-```text
-mini-job-board/
-├── .github/workflows/ci.yml
-├── assets/
-├── data/jobs.json
-├── scripts/validate-jobs.mjs
-├── app.js
-├── job-details.js
-├── saved-jobs.js
-├── site-header.js
-├── index.html
-├── job-details.html
-├── saved-jobs.html
-├── styles.css
-└── package.json
-```
 
 ## Local Setup
 
@@ -113,22 +119,32 @@ npm install
 npm run ci
 ```
 
-Then open `index.html` with Live Server (recommended) or a local static server.
+Open `index.html` with Live Server or any static file server (recommended over `file://` for `fetch` of `data/jobs.json`).
+
+---
+
+## Pages
+
+| File | Purpose |
+|------|---------|
+| `index.html` | Job listing, filters, modals, save/unsave |
+| `job-details.html` | Full detail view for one job (`?id=`) |
+| `saved-jobs.html` | List of saved jobs |
 
 ---
 
 ## Case Study Highlights (Portfolio Use)
 
-- **Challenge:** Combine search, filters, sorting, and persisted preferences without framework state tools.
-- **Approach:** Keep source-of-truth data in memory and derive UI from controlled filtering/sorting pipelines.
-- **Result:** A realistic, interaction-heavy interface with clean empty states and reusable UX patterns.
+- **Challenge:** Combine search, filters, sorting, and persistence without framework state tools.
+- **Approach:** Pure filter functions + in-memory source of truth; UI derives from filtered slices.
+- **Result:** Interaction-heavy UI with tested filter logic and CI-backed data integrity.
 
 ## What I Would Improve Next
 
-- Move data access to an API layer (pagination and server-side filtering)
-- Add unit/integration/e2e automated tests
-- Add accessibility audit and targeted fixes
-- Add deployment previews and release notes workflow
+- Backend API with server-side filtering and pagination
+- Broader automated tests (DOM/integration or Playwright)
+- Accessibility audit and targeted fixes
+- Deployment previews and release notes in CI
 
 ## License
 
