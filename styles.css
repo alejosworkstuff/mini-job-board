@@ -821,6 +821,27 @@ body.dark .filter-dropdown-panel {
   box-shadow: 0 12px 22px rgba(37, 99, 235, 0.28);
 }
 
+.apply-btn.is-applied,
+.apply-btn:disabled {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+  color: #64748b;
+  cursor: default;
+  box-shadow: none;
+  transform: none;
+}
+
+.apply-btn.is-applied:hover,
+.apply-btn:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.job-modal-apply {
+  margin-top: 14px;
+  width: 100%;
+}
+
 .load-more {
   margin-top: 14px;
   width: 100%;

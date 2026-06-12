@@ -142,6 +142,36 @@
             <button
               type="button"
               class="filter-dropdown-trigger"
+              id="salaryFilterBtn"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-controls="salaryFilterList"
+            >
+              <span class="filter-dropdown-label">Any salary</span>
+              <svg class="filter-dropdown-chevron" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+            <ul id="salaryFilterList" class="filter-dropdown-panel" role="listbox" aria-hidden="true" tabindex="-1">
+              <li role="option" class="filter-dropdown-option" data-value="all">Any salary</li>
+              <li role="option" class="filter-dropdown-option" data-value="under-3k">Under $3k / mo</li>
+              <li role="option" class="filter-dropdown-option" data-value="3k-5k">$3k – $5k / mo</li>
+              <li role="option" class="filter-dropdown-option" data-value="5k-8k">$5k – $8k / mo</li>
+              <li role="option" class="filter-dropdown-option" data-value="8k-plus">$8k+ / mo</li>
+            </ul>
+            <select id="salaryFilter" class="filter-select-native" tabindex="-1" aria-hidden="true">
+              <option value="all">Any salary</option>
+              <option value="under-3k">Under $3k / mo</option>
+              <option value="3k-5k">$3k – $5k / mo</option>
+              <option value="5k-8k">$5k – $8k / mo</option>
+              <option value="8k-plus">$8k+ / mo</option>
+            </select>
+          </div>
+
+          <div class="filter-dropdown">
+            <button
+              type="button"
+              class="filter-dropdown-trigger"
               id="sortByBtn"
               aria-haspopup="listbox"
               aria-expanded="false"
@@ -170,6 +200,7 @@
         <div class="results-toolbar">
           <div id="resultsCount" class="results-count">0 jobs found</div>
           <div class="toolbar-right">
+            <div class="saved-count" id="appliedCount">Applied: 0</div>
             <div class="saved-count" id="savedCount">Saved: 0</div>
             <div class="view-toggle" role="group" aria-label="View mode">
               <button id="viewGridBtn" class="view-btn is-active" type="button" aria-pressed="true">Grid</button>
@@ -200,6 +231,7 @@
     <p id="jobModalDescription">Job description will appear here.</p>
 
   <a id="jobModalDetailsLink" href="#">Open full details page</a>
+  <button type="button" id="confirmApplyBtn" class="apply-btn job-modal-apply">Confirm application</button>
   </div>
   </div>
 

@@ -2,6 +2,7 @@
 const searchInput = document.getElementById("searchInput");
 const typeFilter = document.getElementById("typeFilter");
 const seniorityFilter = document.getElementById("seniorityFilter");
+const salaryFilter = document.getElementById("salaryFilter");
 const sortBy = document.getElementById("sortBy");
 const clearFiltersBtn = document.getElementById("clearFilters");
 const jobsListElement = document.getElementById("jobs-list");
@@ -23,6 +24,7 @@ const toast = document.getElementById("toast");
 const viewGridBtn = document.getElementById("viewGridBtn");
 const viewListBtn = document.getElementById("viewListBtn");
 const savedCountElement = document.getElementById("savedCount");
+const appliedCountElement = document.getElementById("appliedCount");
 const jobModal = document.getElementById("jobModal");
 const jobModalTitle = document.getElementById("jobModalTitle");
 const jobModalCompany = document.getElementById("jobModalCompany");
@@ -30,6 +32,7 @@ const jobModalMeta = document.getElementById("jobModalMeta");
 const jobModalDescription = document.getElementById("jobModalDescription");
 const jobModalDetailsLink = document.getElementById("jobModalDetailsLink");
 const closeJobModalBtn = document.getElementById("closeJobModal");
+const confirmApplyBtn = document.getElementById("confirmApplyBtn");
 const savedJobsModal = document.getElementById("savedJobsModal");
 const savedJobsList = document.getElementById("savedJobsList");
 const closeSavedJobsModalBtn = document.getElementById("closeSavedJobsModal");
@@ -40,7 +43,21 @@ let filteredJobs = [];
 let currentPage = 1;
 let currentView = localStorage.getItem("jobsViewMode") || "grid";
 let savedJobs = new Set(readStoredSavedJobs());
+let appliedJobs = new Set(readStoredAppliedJobs());
+let modalJobId = null;
 const PAGE_SIZE = 6;
+
+const SALARY_BANDS = {
+  "under-3k": { min: 0, max: 3000 },
+  "3k-5k": { min: 3000, max: 5000 },
+  "5k-8k": { min: 5000, max: 8000 },
+  "8k-plus": { min: 8000, max: Infinity }
+};
+
+const VALID_TYPES = new Set(["all", "remote", "hybrid", "onsite"]);
+const VALID_SENIORITIES = new Set(["all", "junior", "semi-senior", "senior", "trainee"]);
+const VALID_SALARIES = new Set(["all", "under-3k", "3k-5k", "5k-8k", "8k-plus"]);
+const VALID_SORTS = new Set(["newest", "company-az", "remote-first"]);
 
 let filterDropdownConfigs = [];
 
@@ -95,6 +112,7 @@ function initFilterDropdowns() {
   const specs = [
     { select: typeFilter, triggerId: "typeFilterBtn", listId: "typeFilterList" },
     { select: seniorityFilter, triggerId: "seniorityFilterBtn", listId: "seniorityFilterList" },
+    { select: salaryFilter, triggerId: "salaryFilterBtn", listId: "salaryFilterList" },
     { select: sortBy, triggerId: "sortByBtn", listId: "sortByList" }
   ];
 
@@ -150,7 +168,15 @@ searchInput.addEventListener("input", () => {
 
 typeFilter.addEventListener("change", applyFilters);
 seniorityFilter.addEventListener("change", applyFilters);
+if (salaryFilter) salaryFilter.addEventListener("change", applyFilters);
 sortBy.addEventListener("change", applyFilters);
+
+window.addEventListener("popstate", () => {
+  readFiltersFromUrl();
+  toggleClearSearch();
+  if (filterDropdownConfigs.length) syncFilterDropdownLabels();
+  if (jobs.length) applyFilters();
+});
 
 if (clearFiltersBtn) {
   clearFiltersBtn.addEventListener("click", resetAllFilters);
@@ -329,10 +355,80 @@ if (jobsListElement) {
 }
 
 // ===== FILTER LOGIC =====
+function parseSalaryMonthlyUsd(salary) {
+  if (!salary || typeof salary !== "string") return null;
+  const s = salary.toLowerCase();
+  const kMatches = [...s.matchAll(/([\d.]+)\s*k/gi)];
+  if (kMatches.length < 2) return null;
+
+  let min = parseFloat(kMatches[0][1]) * 1000;
+  let max = parseFloat(kMatches[1][1]) * 1000;
+  const isYearly = /\/\s*year|per\s+year|yearly|gross\s*\/\s*year/.test(s);
+  const isEur = /€|eur/.test(s);
+
+  if (isYearly) {
+    min /= 12;
+    max /= 12;
+  }
+  if (isEur) {
+    min *= 1.08;
+    max *= 1.08;
+  }
+
+  return { min, max };
+}
+
+function jobMatchesSalaryBand(job, band) {
+  if (!band || band === "all") return true;
+  const filterRange = SALARY_BANDS[band];
+  if (!filterRange) return true;
+  const parsed = parseSalaryMonthlyUsd(job.salary);
+  if (!parsed) return false;
+  return parsed.min < filterRange.max && parsed.max > filterRange.min;
+}
+
+function normalizeUrlFilter(value, allowed) {
+  if (!value) return null;
+  const normalized = value.toLowerCase().trim().replace(/\s+/g, "-");
+  return allowed.has(normalized) ? normalized : null;
+}
+
+function readFiltersFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const q = params.get("q") || params.get("search") || "";
+  const type = normalizeUrlFilter(params.get("type"), VALID_TYPES);
+  const seniority = normalizeUrlFilter(params.get("seniority"), VALID_SENIORITIES);
+  const salary = normalizeUrlFilter(params.get("salary"), VALID_SALARIES);
+  const sort = normalizeUrlFilter(params.get("sort"), VALID_SORTS);
+
+  searchInput.value = q;
+  if (type) typeFilter.value = type;
+  if (seniority) seniorityFilter.value = seniority;
+  if (salary && salaryFilter) salaryFilter.value = salary;
+  if (sort) sortBy.value = sort;
+}
+
+function syncUrlToFilters() {
+  const params = new URLSearchParams();
+  const q = searchInput.value.trim();
+  if (q) params.set("q", q);
+  if (typeFilter.value !== "all") params.set("type", typeFilter.value);
+  if (seniorityFilter.value !== "all") params.set("seniority", seniorityFilter.value);
+  if (salaryFilter && salaryFilter.value !== "all") params.set("salary", salaryFilter.value);
+  if (sortBy.value !== "newest") params.set("sort", sortBy.value);
+
+  const query = params.toString();
+  const nextUrl = query ? `${window.location.pathname}?${query}` : window.location.pathname;
+  if (`${window.location.pathname}${window.location.search}` !== nextUrl) {
+    history.replaceState(null, "", nextUrl);
+  }
+}
+
 function applyFilters() {
   const searchText = searchInput.value.toLowerCase().trim();
   const selectedType = typeFilter.value.toLowerCase();
   const selectedSeniority = seniorityFilter.value.toLowerCase();
+  const selectedSalary = salaryFilter ? salaryFilter.value : "all";
 
   currentPage = 1;
   filteredJobs = [...jobs];
@@ -343,6 +439,10 @@ function applyFilters() {
 
   if (selectedSeniority !== "all") {
     filteredJobs = filteredJobs.filter((job) => job.seniority.toLowerCase() === selectedSeniority);
+  }
+
+  if (selectedSalary !== "all") {
+    filteredJobs = filteredJobs.filter((job) => jobMatchesSalaryBand(job, selectedSalary));
   }
 
   if (searchText !== "") {
@@ -356,6 +456,7 @@ function applyFilters() {
   }
 
   filteredJobs = sortJobs(filteredJobs, sortBy.value);
+  syncUrlToFilters();
   updateResults();
   updateActiveFiltersBadge(searchText);
 }
@@ -378,9 +479,13 @@ function renderJobs(list) {
     ].join("");
 
     const isSaved = savedJobs.has(job.id);
+    const isApplied = appliedJobs.has(job.id);
     const saveLabel = isSaved ? "Saved" : "Save";
     const saveStateClass = isSaved ? "is-saved" : "";
     const savePressed = isSaved ? "true" : "false";
+    const applyLabel = isApplied ? "Applied" : "Apply now";
+    const applyStateClass = isApplied ? "is-applied" : "";
+    const applyDisabled = isApplied ? "disabled" : "";
 
     jobCard.innerHTML = `
       <div class="job-top">
@@ -402,7 +507,7 @@ function renderJobs(list) {
       <p class="job-company">${job.company}</p>
       <div class="job-meta">${chips}</div>
       <div class="job-actions">
-        <button type="button" class="apply-btn" data-job-id="${job.id}">Apply now</button>
+        <button type="button" class="apply-btn ${applyStateClass}" data-job-id="${job.id}" ${applyDisabled} aria-label="${isApplied ? "Already applied" : "Apply now"}">${applyLabel}</button>
         <button type="button" class="ghost-btn" data-job-id="${job.id}">Details</button>
       </div>
     `;
@@ -418,6 +523,7 @@ function updateResults() {
   renderJobs(visible);
   updateResultsCount(total, visible.length);
   updateSavedCount();
+  updateAppliedCount();
 
   emptyState.hidden = total !== 0;
 
@@ -444,6 +550,7 @@ function updateActiveFiltersBadge(searchText) {
   if (searchText) count += 1;
   if (typeFilter.value !== "all") count += 1;
   if (seniorityFilter.value !== "all") count += 1;
+  if (salaryFilter && salaryFilter.value !== "all") count += 1;
 
   if (count === 0) {
     activeFiltersBadge.hidden = true;
@@ -536,10 +643,40 @@ function readStoredSavedJobs() {
   }
 }
 
+function updateAppliedCount() {
+  if (!appliedCountElement) return;
+  appliedCountElement.textContent = `Applied: ${appliedJobs.size}`;
+}
+
+function markJobApplied(id) {
+  appliedJobs.add(id);
+  localStorage.setItem("appliedJobs", JSON.stringify([...appliedJobs]));
+  updateAppliedCount();
+}
+
+function readStoredAppliedJobs() {
+  try {
+    const applied = JSON.parse(localStorage.getItem("appliedJobs") || "[]");
+    return Array.isArray(applied) ? applied.filter((id) => Number.isInteger(id)) : [];
+  } catch (error) {
+    console.warn("Could not parse applied jobs from localStorage.", error);
+    return [];
+  }
+}
+
+function updateApplyButtonState() {
+  if (!confirmApplyBtn || modalJobId === null) return;
+  const isApplied = appliedJobs.has(modalJobId);
+  confirmApplyBtn.textContent = isApplied ? "Already applied" : "Confirm application";
+  confirmApplyBtn.disabled = isApplied;
+  confirmApplyBtn.classList.toggle("is-applied", isApplied);
+}
+
 function resetAllFilters() {
   searchInput.value = "";
   typeFilter.value = "all";
   seniorityFilter.value = "all";
+  if (salaryFilter) salaryFilter.value = "all";
   sortBy.value = "newest";
   toggleClearSearch();
   if (filterDropdownConfigs.length) syncFilterDropdownLabels();
@@ -661,6 +798,7 @@ if (closeSavedJobsModalBtn) {
 function openJobModal(job) {
   if (!jobModal || !jobModalTitle) return;
 
+  modalJobId = job.id;
   jobModalTitle.textContent = job.title;
   if (jobModalCompany) jobModalCompany.textContent = job.company;
   if (jobModalMeta) {
@@ -674,6 +812,7 @@ function openJobModal(job) {
   if (jobModalDetailsLink) {
     jobModalDetailsLink.href = `job-details.html?id=${job.id}`;
   }
+  updateApplyButtonState();
 
   jobModal.hidden = false;
   document.body.style.overflow = "hidden";
@@ -683,6 +822,7 @@ function openJobModal(job) {
 function closeJobModal() {
   if (!jobModal) return;
   jobModal.hidden = true;
+  modalJobId = null;
   if (!savedJobsModal || savedJobsModal.hidden) {
     document.body.style.overflow = "";
   }
@@ -696,6 +836,16 @@ if (jobModal) {
 
 if (closeJobModalBtn) {
   closeJobModalBtn.addEventListener("click", closeJobModal);
+}
+
+if (confirmApplyBtn) {
+  confirmApplyBtn.addEventListener("click", () => {
+    if (modalJobId === null || appliedJobs.has(modalJobId)) return;
+    markJobApplied(modalJobId);
+    updateApplyButtonState();
+    updateResults();
+    showToast("Application recorded — good luck!");
+  });
 }
 
 document.addEventListener("keydown", (event) => {
@@ -719,9 +869,11 @@ document.addEventListener("DOMContentLoaded", () => {
   if (darkModeBtn) {
     darkModeBtn.textContent = isDark ? "Light" : "Dark";
   }
+  readFiltersFromUrl();
   setViewMode(currentView);
   toggleClearSearch();
   updateSavedCount();
+  updateAppliedCount();
   initFilterDropdowns();
   syncFilterDropdownLabels();
 });

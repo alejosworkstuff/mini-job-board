@@ -231,5 +231,469 @@
       "Career path toward data science or analytics engineering",
       "Flexible hours around core collaboration windows"
     ]
+  },
+  {
+    "id": 1,
+    "title": "Junior Frontend Developer",
+    "company": "WebWorks",
+    "type": "Hybrid",
+    "location": "Brazil",
+    "seniority": "Junior",
+    "employment": "Full-time",
+    "salary": "$2.5k–3.2k USD / month",
+    "description": "Grow your React skills on a squad that ships customer-facing features every sprint. You'll pair with mid-level engineers, learn our design system, and take ownership of smaller UI flows end to end.",
+    "responsibilities": [
+      "Implement UI components from Figma specs with accessibility in mind.",
+      "Fix bugs and write unit tests for shared hooks and presentational components.",
+      "Participate in code review and squad ceremonies with prepared questions.",
+      "Document component usage in Storybook as you learn the library."
+    ],
+    "requirements": [
+      "1–2 years with React or strong internship/portfolio work.",
+      "Basic TypeScript and comfort reading API response shapes.",
+      "Attention to responsive layout and keyboard navigation basics.",
+      "Portuguese or English for team communication."
+    ],
+    "benefits": [
+      "Hybrid schedule with 2 office days in São Paulo",
+      "Mentorship pairing for the first six months",
+      "Learning stipend for courses",
+      "Health plan after probation"
+    ]
+  },
+  {
+    "id": 2,
+    "title": "QA Engineer",
+    "company": "Insight Lab",
+    "type": "Remote",
+    "location": "Argentina",
+    "seniority": "Semi-Senior",
+    "employment": "Full-time",
+    "salary": "$3k–4.5k USD / month",
+    "description": "Quality is a team sport here. You'll design test plans, automate critical paths, and help squads catch regressions before they reach production.",
+    "responsibilities": [
+      "Write and maintain Playwright and API integration tests for core flows.",
+      "Partner with developers on acceptance criteria during refinement.",
+      "Track flaky tests and improve CI signal-to-noise ratio.",
+      "Run exploratory sessions on new features before major releases."
+    ],
+    "requirements": [
+      "3+ years in QA or SDET roles for web products.",
+      "Experience with test automation frameworks and CI pipelines.",
+      "Solid HTTP and browser debugging skills.",
+      "Spanish professional proficiency; async English for docs."
+    ],
+    "benefits": [
+      "Fully remote across Argentina",
+      "Certification budget",
+      "Flexible PTO",
+      "Annual team meetup"
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Mobile Developer",
+    "company": "ScaleUp Corp",
+    "type": "Remote",
+    "location": "Global",
+    "seniority": "Senior",
+    "employment": "Full-time",
+    "salary": "$7k–10k USD / month",
+    "description": "Our mobile apps serve a global user base. You'll lead architecture for React Native features, performance tuning, and release discipline across iOS and Android.",
+    "responsibilities": [
+      "Own major mobile initiatives from RFC to App Store / Play release.",
+      "Establish patterns for navigation, offline caching, and error reporting.",
+      "Mentor mobile engineers and review PRs with a quality bar.",
+      "Collaborate with backend on API contracts optimized for mobile clients."
+    ],
+    "requirements": [
+      "5+ years mobile development; strong React Native in production.",
+      "Shipped apps with meaningful DAU; familiar with store review processes.",
+      "Performance profiling experience on real devices.",
+      "Excellent written communication for distributed teams."
+    ],
+    "benefits": [
+      "Global remote compensation",
+      "Latest devices budget",
+      "Stock options",
+      "Conference attendance"
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Technical Writer",
+    "company": "InfraCloud",
+    "type": "Remote",
+    "location": "EU",
+    "seniority": "Junior",
+    "employment": "Full-time",
+    "salary": "$2.2k–3k USD / month",
+    "description": "Developers deserve docs that respect their time. You'll maintain API references, runbooks, and onboarding guides for our platform products.",
+    "responsibilities": [
+      "Update API and SDK documentation alongside engineering releases.",
+      "Interview engineers to capture architecture decisions in plain language.",
+      "Improve information architecture for the docs site based on analytics.",
+      "Edit contributions from engineers for clarity and consistency."
+    ],
+    "requirements": [
+      "1–3 years technical writing or developer advocacy with writing samples.",
+      "Comfort reading code snippets in Go, YAML, and shell.",
+      "Experience with docs-as-code workflows (Markdown, Git).",
+      "Professional English; additional EU languages a plus."
+    ],
+    "benefits": [
+      "Remote across EU time zones",
+      "Coworking stipend",
+      "Training in developer experience tooling",
+      "Flexible hours"
+    ]
+  },
+  {
+    "id": 7,
+    "title": "Security Engineer",
+    "company": "Cloud Delta",
+    "type": "Hybrid",
+    "location": "Mexico",
+    "seniority": "Senior",
+    "employment": "Full-time",
+    "salary": "$5.5k–7.5k USD / month",
+    "description": "Help us stay ahead of threats without slowing delivery. You'll run assessments, guide secure SDLC practices, and respond to findings with pragmatic fixes.",
+    "responsibilities": [
+      "Conduct application and infrastructure security reviews for new features.",
+      "Maintain dependency scanning and secrets detection in CI.",
+      "Support incident response for security events with clear comms.",
+      "Train engineers on OWASP Top 10 mitigations relevant to our stack."
+    ],
+    "requirements": [
+      "4+ years in application security or security-focused platform roles.",
+      "Hands-on experience with AWS, containers, and modern web stacks.",
+      "Familiarity with compliance frameworks (SOC 2, ISO 27001) as a contributor.",
+      "Based in Mexico or aligned Americas hours for hybrid collaboration."
+    ],
+    "benefits": [
+      "Hybrid in Mexico City",
+      "Security conference budget",
+      "Health and life insurance",
+      "Bonus for on-call security rotations"
+    ]
+  },
+  {
+    "id": 9,
+    "title": "Machine Learning Engineer",
+    "company": "Insight Lab",
+    "type": "Remote",
+    "location": "LATAM",
+    "seniority": "Senior",
+    "employment": "Full-time",
+    "salary": "$6k–8.5k USD / month",
+    "description": "Turn models into reliable product features. You'll own training pipelines, evaluation metrics, and the path from notebook to production API.",
+    "responsibilities": [
+      "Design and deploy ML services with monitoring for drift and latency.",
+      "Collaborate with data analysts on feature stores and labeling quality.",
+      "Implement A/B tests and guardrails for model rollouts.",
+      "Document model cards and limitations for stakeholders."
+    ],
+    "requirements": [
+      "4+ years ML engineering with Python and at least one major framework.",
+      "Experience shipping models to production with observability.",
+      "Strong statistics intuition and experiment design skills.",
+      "English or Spanish for cross-functional work."
+    ],
+    "benefits": [
+      "Remote-first across LATAM",
+      "GPU/cloud credits for experiments",
+      "Research paper club and learning budget",
+      "Equity for senior hires"
+    ]
+  },
+  {
+    "id": 10,
+    "title": "Customer Success Manager",
+    "company": "CodeWave",
+    "type": "Remote",
+    "location": "LATAM",
+    "seniority": "Semi-Senior",
+    "employment": "Full-time",
+    "salary": "$3.5k–5k USD / month",
+    "description": "Be the voice of our customers internally. You'll onboard accounts, drive adoption, and spot expansion opportunities without being pushy.",
+    "responsibilities": [
+      "Run structured onboarding and quarterly business reviews.",
+      "Track health scores and escalate risk accounts early.",
+      "Feed product with prioritized customer feedback.",
+      "Coordinate with support on complex technical issues."
+    ],
+    "requirements": [
+      "3+ years in B2B SaaS customer success or account management.",
+      "Comfort discussing technical products with engineering buyers.",
+      "CRM proficiency and strong written follow-up habits.",
+      "Fluent Spanish; English for internal tools and docs."
+    ],
+    "benefits": [
+      "Remote with quarterly team offsites",
+      "Commission on expansions",
+      "Health coverage options",
+      "Professional development budget"
+    ]
+  },
+  {
+    "id": 12,
+    "title": "iOS Developer",
+    "company": "WebWorks",
+    "type": "Onsite",
+    "location": "Brazil",
+    "seniority": "Semi-Senior",
+    "employment": "Full-time",
+    "salary": "$4k–5.5k USD / month",
+    "description": "Build polished native experiences for our Brazilian user base. You'll work in SwiftUI, integrate with shared APIs, and care about App Store ratings.",
+    "responsibilities": [
+      "Ship features in Swift with unit and UI tests for critical paths.",
+      "Collaborate with design on HIG-compliant interactions.",
+      "Profile memory and launch time on supported device matrix.",
+      "Participate in release train and hotfix process."
+    ],
+    "requirements": [
+      "3+ years iOS development; SwiftUI and UIKit experience.",
+      "Published apps or strong portfolio of shipped work.",
+      "Understanding of REST APIs and offline-first patterns.",
+      "Onsite in São Paulo with occasional remote days."
+    ],
+    "benefits": [
+      "Modern office in São Paulo",
+      "Apple developer program covered",
+      "Meal vouchers and transport",
+      "Career ladder to senior iOS"
+    ]
+  },
+  {
+    "id": 13,
+    "title": "Sales Development Representative",
+    "company": "ScaleUp Corp",
+    "type": "Hybrid",
+    "location": "Global",
+    "seniority": "Junior",
+    "employment": "Full-time",
+    "salary": "$2k–2.8k USD / month",
+    "description": "Start your sales career with clear playbooks and coaching. You'll qualify inbound leads, research accounts, and book meetings for account executives.",
+    "responsibilities": [
+      "Respond to inbound leads within SLA using CRM workflows.",
+      "Research prospects and personalize outreach sequences.",
+      "Log activities accurately and hand off qualified opportunities.",
+      "Iterate on messaging based on win/loss feedback."
+    ],
+    "requirements": [
+      "0–2 years in SDR, retail sales, or customer-facing roles with ambition to grow.",
+      "Strong written English for global prospects.",
+      "Organized, resilient, and comfortable with metrics.",
+      "Hybrid availability where local hub exists."
+    ],
+    "benefits": [
+      "Base plus uncapped commission accelerators",
+      "Sales training program",
+      "Clear promotion path to AE",
+      "Health and wellness stipend"
+    ]
+  },
+  {
+    "id": 14,
+    "title": "Platform Engineer",
+    "company": "InfraCloud",
+    "type": "Remote",
+    "location": "Spain",
+    "seniority": "Semi-Senior",
+    "employment": "Full-time",
+    "salary": "€48k–62k gross / year",
+    "description": "Internal developers are your customers. You'll build self-service tooling, golden paths, and documentation that makes the right thing the easy thing.",
+    "responsibilities": [
+      "Maintain developer portal, service templates, and scaffolding CLI.",
+      "Improve local dev environments and preview deployments.",
+      "Gather developer satisfaction signals and prioritize platform backlog.",
+      "Partner with SRE on shared observability standards."
+    ],
+    "requirements": [
+      "4+ years backend or platform engineering.",
+      "Experience with Kubernetes, Terraform, and CI systems.",
+      "Empathy for developer experience and internal product mindset.",
+      "Professional English; hybrid optional in Madrid."
+    ],
+    "benefits": [
+      "Remote across Spain",
+      "Flexible remuneration package",
+      "Conference and cert budget",
+      "25 vacation days"
+    ]
+  },
+  {
+    "id": 16,
+    "title": "UX Researcher",
+    "company": "ScaleUp Corp",
+    "type": "Remote",
+    "location": "Global",
+    "seniority": "Semi-Senior",
+    "employment": "Full-time",
+    "salary": "$4.5k–6k USD / month",
+    "description": "Bring evidence to design decisions. You'll plan studies, synthesize insights, and embed research rituals without blocking shipping.",
+    "responsibilities": [
+      "Plan and moderate user interviews and usability tests.",
+      "Synthesize findings into actionable recommendations for design and PM.",
+      "Maintain research repository and participant panels.",
+      "Coach designers on lightweight validation techniques."
+    ],
+    "requirements": [
+      "3+ years UX research in B2B or consumer digital products.",
+      "Mixed-methods portfolio with clear impact stories.",
+      "Comfort working async with global stakeholders.",
+      "Fluent English for reports and presentations."
+    ],
+    "benefits": [
+      "Global remote",
+      "Research tools budget",
+      "Parental leave",
+      "Stock options"
+    ]
+  },
+  {
+    "id": 17,
+    "title": "Ruby on Rails Developer",
+    "company": "CodeWave",
+    "type": "Remote",
+    "location": "LATAM",
+    "seniority": "Senior",
+    "employment": "Full-time",
+    "salary": "$5k–7k USD / month",
+    "description": "Our monolith is mature but evolving. You'll modernize hot paths, improve test coverage, and mentor engineers on Rails conventions that scale.",
+    "responsibilities": [
+      "Design and ship features in Rails 7 with clear boundaries toward services.",
+      "Optimize N+1 queries and background job reliability.",
+      "Lead migrations and deprecation plans with zero-downtime discipline.",
+      "Review PRs and uphold style guides for models, jobs, and APIs."
+    ],
+    "requirements": [
+      "5+ years Rails in production with PostgreSQL and Redis.",
+      "Experience extracting services or modularizing large codebases.",
+      "Strong testing habits with RSpec or Minitest.",
+      "Async-friendly communication in English or Spanish."
+    ],
+    "benefits": [
+      "Remote-first LATAM",
+      "Open source Friday time",
+      "Learning budget",
+      "Equity participation"
+    ]
+  },
+  {
+    "id": 18,
+    "title": "Support Engineer",
+    "company": "Cloud Delta",
+    "type": "Onsite",
+    "location": "Mexico",
+    "seniority": "Junior",
+    "employment": "Full-time",
+    "salary": "$1.5k–2k USD / month",
+    "description": "Be the first line for customers when things go wrong. You'll troubleshoot issues, document solutions, and escalate with complete context.",
+    "responsibilities": [
+      "Handle tier-1 tickets via chat and email within SLA targets.",
+      "Reproduce bugs and file detailed engineering tickets.",
+      "Maintain knowledge base articles from recurring issues.",
+      "Collect customer sentiment for product feedback loops."
+    ],
+    "requirements": [
+      "Customer support or IT helpdesk experience preferred.",
+      "Basic troubleshooting of web apps and browsers.",
+      "Patient communication under pressure.",
+      "Spanish fluency; English for internal escalation."
+    ],
+    "benefits": [
+      "Onsite Mexico City with hybrid after ramp-up",
+      "Shift differential where applicable",
+      "Path to technical support engineer",
+      "Meals and transit support"
+    ]
+  },
+  {
+    "id": 19,
+    "title": "Engineering Manager",
+    "company": "WebWorks",
+    "type": "Hybrid",
+    "location": "Brazil",
+    "seniority": "Senior",
+    "employment": "Full-time",
+    "salary": "$8k–11k USD / month",
+    "description": "Lead a squad of six engineers building our core product. You'll balance delivery, growth, and healthy team dynamics in a hybrid environment.",
+    "responsibilities": [
+      "Own roadmap execution with PM and clear sprint commitments.",
+      "Coach engineers through 1:1s, feedback, and growth plans.",
+      "Hire and onboard talent aligned with team values.",
+      "Remove blockers and shield the team from unnecessary churn."
+    ],
+    "requirements": [
+      "2+ years people management plus prior senior IC experience.",
+      "Technical credibility in web stacks; can review architecture decisions.",
+      "Track record shipping product in agile environments.",
+      "Portuguese and English for team and stakeholder comms."
+    ],
+    "benefits": [
+      "Hybrid São Paulo leadership hub",
+      "Leadership coaching budget",
+      "Competitive equity",
+      "Executive health plan"
+    ]
+  },
+  {
+    "id": 20,
+    "title": "Graphic Designer",
+    "company": "Insight Lab",
+    "type": "Remote",
+    "location": "Argentina",
+    "seniority": "Junior",
+    "employment": "Full-time",
+    "salary": "$2k–2.6k USD / month",
+    "description": "Support marketing and product with on-brand visuals. You'll produce social assets, presentation decks, and occasional illustration work.",
+    "responsibilities": [
+      "Create social and campaign assets following brand guidelines.",
+      "Prepare slide templates and one-pagers for sales and leadership.",
+      "Collaborate with product design on marketing landing pages.",
+      "Organize asset library and export specs for developers."
+    ],
+    "requirements": [
+      "1–2 years graphic design with a strong portfolio.",
+      "Proficiency in Figma and Adobe Creative Suite.",
+      "Understanding of web-safe formats and responsive imagery basics.",
+      "Spanish professional proficiency."
+    ],
+    "benefits": [
+      "Remote within Argentina",
+      "Software licenses covered",
+      "Creative courses budget",
+      "Flexible schedule"
+    ]
+  },
+  {
+    "id": 23,
+    "title": "Site Reliability Engineer",
+    "company": "InfraCloud",
+    "type": "Remote",
+    "location": "EU",
+    "seniority": "Senior",
+    "employment": "Full-time",
+    "salary": "€70k–85k gross / year",
+    "description": "Reliability is the feature. You'll define SLOs, improve incident response, and automate toil so engineers focus on product work.",
+    "responsibilities": [
+      "Own error budgets and SLO dashboards for critical services.",
+      "Lead incident command and blameless postmortems.",
+      "Automate runbooks and capacity planning workflows.",
+      "Partner with platform on chaos exercises and failover drills."
+    ],
+    "requirements": [
+      "5+ years SRE or production engineering in cloud-native environments.",
+      "Deep Kubernetes and observability stack experience.",
+      "On-call experience with sustainable rotation design.",
+      "EU timezone alignment."
+    ],
+    "benefits": [
+      "Remote EU with on-call compensation",
+      "Top-tier hardware",
+      "Pension and health packages",
+      "Summit travel budget"
+    ]
   }
 ]

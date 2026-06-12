@@ -1,4 +1,5 @@
 const STORAGE_KEY = "savedJobs";
+const APPLIED_STORAGE_KEY = "appliedJobs";
 
 const detailLoading = document.getElementById("detailLoading");
 const detailNotFound = document.getElementById("detailNotFound");
@@ -21,6 +22,7 @@ const jobModalCompany = document.getElementById("jobModalCompany");
 const jobModalMeta = document.getElementById("jobModalMeta");
 const jobModalDescription = document.getElementById("jobModalDescription");
 const closeJobModalBtn = document.getElementById("closeJobModal");
+const confirmApplyBtn = document.getElementById("confirmApplyBtn");
 
 let currentJob = null;
 
@@ -51,6 +53,43 @@ function setSaved(id, saved) {
   if (saved) ids.add(id);
   else ids.delete(id);
   localStorage.setItem(STORAGE_KEY, JSON.stringify([...ids]));
+}
+
+function readAppliedIds() {
+  try {
+    const applied = JSON.parse(localStorage.getItem(APPLIED_STORAGE_KEY) || "[]");
+    return Array.isArray(applied) ? applied.filter((id) => Number.isInteger(id)) : [];
+  } catch {
+    return [];
+  }
+}
+
+function isApplied(id) {
+  return readAppliedIds().includes(id);
+}
+
+function setApplied(id, applied) {
+  const ids = new Set(readAppliedIds());
+  if (applied) ids.add(id);
+  else ids.delete(id);
+  localStorage.setItem(APPLIED_STORAGE_KEY, JSON.stringify([...ids]));
+}
+
+function updateApplyButton() {
+  if (!detailApplyBtn || !currentJob) return;
+  const applied = isApplied(currentJob.id);
+  detailApplyBtn.textContent = applied ? "Applied" : "Apply now";
+  detailApplyBtn.disabled = applied;
+  detailApplyBtn.classList.toggle("is-applied", applied);
+  detailApplyBtn.setAttribute("aria-label", applied ? "Already applied" : "Apply now");
+}
+
+function updateModalApplyButton() {
+  if (!confirmApplyBtn || !currentJob) return;
+  const applied = isApplied(currentJob.id);
+  confirmApplyBtn.textContent = applied ? "Already applied" : "Confirm application";
+  confirmApplyBtn.disabled = applied;
+  confirmApplyBtn.classList.toggle("is-applied", applied);
 }
 
 function updateSaveButton() {
@@ -207,6 +246,7 @@ function renderJob(job, allJobs) {
   renderAboutRole(job);
 
   updateSaveButton();
+  updateApplyButton();
   renderRelated(job, getRelated(job, allJobs));
   showState("content");
 }
@@ -223,6 +263,7 @@ function openJobModal(job) {
       job.description ||
       'No long description yet. Add a "description" field in data/jobs.json.';
   }
+  updateModalApplyButton();
   jobModal.hidden = false;
   document.body.style.overflow = "hidden";
   if (closeJobModalBtn) closeJobModalBtn.focus();
@@ -290,7 +331,17 @@ if (shareJobBtn) {
 
 if (detailApplyBtn) {
   detailApplyBtn.addEventListener("click", () => {
-    if (currentJob) openJobModal(currentJob);
+    if (currentJob && !isApplied(currentJob.id)) openJobModal(currentJob);
+  });
+}
+
+if (confirmApplyBtn) {
+  confirmApplyBtn.addEventListener("click", () => {
+    if (!currentJob || isApplied(currentJob.id)) return;
+    setApplied(currentJob.id, true);
+    updateApplyButton();
+    updateModalApplyButton();
+    showToast("Application recorded — good luck!");
   });
 }
 
