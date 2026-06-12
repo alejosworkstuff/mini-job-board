@@ -7,6 +7,12 @@ This project is part of my portfolio focus on production-style frontend engineer
 **Live:** [alejosworkstuff.github.io/mini-job-board](https://alejosworkstuff.github.io/mini-job-board/)  
 **Repo:** [github.com/alejosworkstuff/mini-job-board](https://github.com/alejosworkstuff/mini-job-board)
 
+## Screenshots
+
+| Job listing | Job details | Saved jobs | Dark mode |
+|:---:|:---:|:---:|:---:|
+| ![Job listing](./docs/screenshots/main.png) | ![Job details](./docs/screenshots/job-details.png) | ![Saved jobs](./docs/screenshots/saved-jobs.png) | ![Dark mode](./docs/screenshots/dark.png) |
+
 ---
 
 ## Problem and Context
