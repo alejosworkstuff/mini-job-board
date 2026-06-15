@@ -1,3 +1,5 @@
+import { applyJobFilters } from "./scripts/filter-logic.mjs";
+
 // ===== DOM =====
 const searchInput = document.getElementById("searchInput");
 const typeFilter = document.getElementById("typeFilter");
@@ -46,13 +48,6 @@ let savedJobs = new Set(readStoredSavedJobs());
 let appliedJobs = new Set(readStoredAppliedJobs());
 let modalJobId = null;
 const PAGE_SIZE = 6;
-
-const SALARY_BANDS = {
-  "under-3k": { min: 0, max: 3000 },
-  "3k-5k": { min: 3000, max: 5000 },
-  "5k-8k": { min: 5000, max: 8000 },
-  "8k-plus": { min: 8000, max: Infinity }
-};
 
 const VALID_TYPES = new Set(["all", "remote", "hybrid", "onsite"]);
 const VALID_SENIORITIES = new Set(["all", "junior", "semi-senior", "senior", "trainee"]);
@@ -149,11 +144,23 @@ function initFilterDropdowns() {
 }
 
 // ===== FETCH =====
+let jobsLoaded = false;
+let domReady = false;
+
+function tryInitialRender() {
+  if (!jobsLoaded || !domReady) return;
+  syncFilterDropdownLabels();
+  applyFilters();
+}
+
+readFiltersFromUrl();
+
 fetch("./data/jobs.json")
   .then((response) => response.json())
   .then((data) => {
     jobs = data;
-    applyFilters();
+    jobsLoaded = true;
+    tryInitialRender();
     if (savedJobsModal && !savedJobsModal.hidden) {
       renderSavedJobsList();
     }
@@ -355,38 +362,6 @@ if (jobsListElement) {
 }
 
 // ===== FILTER LOGIC =====
-function parseSalaryMonthlyUsd(salary) {
-  if (!salary || typeof salary !== "string") return null;
-  const s = salary.toLowerCase();
-  const kMatches = [...s.matchAll(/([\d.]+)\s*k/gi)];
-  if (kMatches.length < 2) return null;
-
-  let min = parseFloat(kMatches[0][1]) * 1000;
-  let max = parseFloat(kMatches[1][1]) * 1000;
-  const isYearly = /\/\s*year|per\s+year|yearly|gross\s*\/\s*year/.test(s);
-  const isEur = /€|eur/.test(s);
-
-  if (isYearly) {
-    min /= 12;
-    max /= 12;
-  }
-  if (isEur) {
-    min *= 1.08;
-    max *= 1.08;
-  }
-
-  return { min, max };
-}
-
-function jobMatchesSalaryBand(job, band) {
-  if (!band || band === "all") return true;
-  const filterRange = SALARY_BANDS[band];
-  if (!filterRange) return true;
-  const parsed = parseSalaryMonthlyUsd(job.salary);
-  if (!parsed) return false;
-  return parsed.min < filterRange.max && parsed.max > filterRange.min;
-}
-
 function normalizeUrlFilter(value, allowed) {
   if (!value) return null;
   const normalized = value.toLowerCase().trim().replace(/\s+/g, "-");
@@ -425,40 +400,22 @@ function syncUrlToFilters() {
 }
 
 function applyFilters() {
-  const searchText = searchInput.value.toLowerCase().trim();
-  const selectedType = typeFilter.value.toLowerCase();
-  const selectedSeniority = seniorityFilter.value.toLowerCase();
+  const searchText = searchInput.value.trim();
+  const selectedType = typeFilter.value;
+  const selectedSeniority = seniorityFilter.value;
   const selectedSalary = salaryFilter ? salaryFilter.value : "all";
 
   currentPage = 1;
-  filteredJobs = [...jobs];
-
-  if (selectedType !== "all") {
-    filteredJobs = filteredJobs.filter((job) => job.type.toLowerCase() === selectedType);
-  }
-
-  if (selectedSeniority !== "all") {
-    filteredJobs = filteredJobs.filter((job) => job.seniority.toLowerCase() === selectedSeniority);
-  }
-
-  if (selectedSalary !== "all") {
-    filteredJobs = filteredJobs.filter((job) => jobMatchesSalaryBand(job, selectedSalary));
-  }
-
-  if (searchText !== "") {
-    filteredJobs = filteredJobs.filter((job) => {
-      return (
-        job.title.toLowerCase().includes(searchText) ||
-        job.company.toLowerCase().includes(searchText) ||
-        (job.location || "").toLowerCase().includes(searchText)
-      );
-    });
-  }
-
-  filteredJobs = sortJobs(filteredJobs, sortBy.value);
+  filteredJobs = applyJobFilters(jobs, {
+    searchText,
+    selectedType,
+    selectedSeniority,
+    selectedSalary,
+    sortMode: sortBy.value
+  });
   syncUrlToFilters();
   updateResults();
-  updateActiveFiltersBadge(searchText);
+  updateActiveFiltersBadge(searchText.toLowerCase());
 }
 
 // ===== RENDER =====
@@ -473,9 +430,9 @@ function renderJobs(list) {
 
     const badgeClass = slugify(job.seniority);
     const chips = [
-      job.type ? `<span class="chip">${job.type}</span>` : "",
-      job.location ? `<span class="chip">${job.location}</span>` : "",
-      job.salary ? `<span class="chip">${job.salary}</span>` : ""
+      job.type ? `<span class="chip">${escapeHtml(job.type)}</span>` : "",
+      job.location ? `<span class="chip">${escapeHtml(job.location)}</span>` : "",
+      job.salary ? `<span class="chip">${escapeHtml(job.salary)}</span>` : ""
     ].join("");
 
     const isSaved = savedJobs.has(job.id);
@@ -501,10 +458,10 @@ function renderJobs(list) {
         </button>
       </div>
       <div class="job-header">
-        <h3 class="job-title">${job.title}</h3>
-        <span class="badge ${badgeClass}">${job.seniority}</span>
+        <h3 class="job-title">${escapeHtml(job.title)}</h3>
+        <span class="badge ${badgeClass}">${escapeHtml(job.seniority)}</span>
       </div>
-      <p class="job-company">${job.company}</p>
+      <p class="job-company">${escapeHtml(job.company)}</p>
       <div class="job-meta">${chips}</div>
       <div class="job-actions">
         <button type="button" class="apply-btn ${applyStateClass}" data-job-id="${job.id}" ${applyDisabled} aria-label="${isApplied ? "Already applied" : "Apply now"}">${applyLabel}</button>
@@ -608,30 +565,6 @@ function showToast(message) {
 }
 
 showToast.timerId = 0;
-
-function sortJobs(list, mode) {
-  const sorted = [...list];
-
-  if (mode === "company-az") {
-    sorted.sort((a, b) => a.company.localeCompare(b.company));
-    return sorted;
-  }
-
-  if (mode === "remote-first") {
-    const rank = (job) => {
-      const type = job.type.toLowerCase();
-      if (type === "remote") return 0;
-      if (type === "hybrid") return 1;
-      return 2;
-    };
-
-    sorted.sort((a, b) => rank(a) - rank(b) || a.company.localeCompare(b.company));
-    return sorted;
-  }
-
-  sorted.sort((a, b) => (b.id || 0) - (a.id || 0));
-  return sorted;
-}
 
 function readStoredSavedJobs() {
   try {
@@ -869,11 +802,11 @@ document.addEventListener("DOMContentLoaded", () => {
   if (darkModeBtn) {
     darkModeBtn.textContent = isDark ? "Light" : "Dark";
   }
-  readFiltersFromUrl();
   setViewMode(currentView);
   toggleClearSearch();
   updateSavedCount();
   updateAppliedCount();
   initFilterDropdowns();
-  syncFilterDropdownLabels();
+  domReady = true;
+  tryInitialRender();
 });
