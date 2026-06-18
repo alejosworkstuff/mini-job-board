@@ -24,7 +24,8 @@ Most junior frontend demos only show static UIs. I wanted interaction-heavy prod
 - Designed and implemented the full frontend architecture
 - Built filter/search/sort logic in shared modules (`scripts/filter-logic.mjs`)
 - Implemented saved jobs, modals, detail pages, and header/menu UX
-- Added automated tests for filter logic and CI for syntax + data validation
+- Added unit tests for filter logic and Playwright E2E for core user flows
+- Wired CI for syntax checks, data validation, unit tests, and E2E
 
 ## Architecture Overview
 
@@ -44,6 +45,8 @@ mini-job-board/
 │   └── validate-jobs.mjs     # JSON schema validation for CI
 ├── tests/
 │   └── filter-logic.test.mjs # Node test runner
+├── e2e/                      # Playwright E2E specs
+├── playwright.config.js
 └── .github/workflows/ci.yml
 ```
 
@@ -85,7 +88,8 @@ mini-job-board/
 
 - HTML5, CSS3
 - Vanilla JavaScript (ES modules in tests; classic scripts in pages)
-- Node.js (syntax checks, data validation, tests)
+- Node.js (syntax checks, data validation, unit tests)
+- Playwright (E2E browser tests)
 - GitHub Actions (CI)
 
 ---
@@ -97,13 +101,29 @@ GitHub Actions (`.github/workflows/ci.yml`) on pull requests and pushes to `main
 - JavaScript syntax checks (`npm run check:syntax`) for `app.js`, `job-details.js`, `saved-jobs.js`, `site-header.js`
 - Data validation (`npm run check:data`) — required fields, unique IDs, non-empty arrays in `data/jobs.json`
 - Unit tests (`npm run test`) — `tests/filter-logic.test.mjs` via `node --test`
+- E2E tests (`npm run test:e2e`) — Playwright against a local static server (`serve` on port 4173)
 
 Run locally:
 
 ```bash
 npm install
-npm run ci
+npm run ci          # syntax + data + unit tests
+npm run test:e2e    # Playwright (installs browsers on first run: npx playwright install chromium)
+npm run ci:full     # all of the above
 ```
+
+### Playwright E2E (8 scenarios)
+
+| Spec file | Scenario |
+|-----------|----------|
+| `e2e/browse-save-jobs.spec.js` | Search, save a job, and open the saved jobs modal |
+| `e2e/filter-url-state.spec.js` | Filter by job type and seniority from the UI |
+| `e2e/filter-url-state.spec.js` | Filter by salary band |
+| `e2e/filter-url-state.spec.js` | Load filter state from URL query params |
+| `e2e/filter-url-state.spec.js` | Update URL when filters change |
+| `e2e/filter-url-state.spec.js` | Load-more pagination with expanded dataset |
+| `e2e/apply-tracking.spec.js` | Record application from the apply modal (with reload persistence) |
+| `e2e/apply-tracking.spec.js` | Applied state persists on the job details page |
 
 ### npm Scripts
 
@@ -112,7 +132,9 @@ npm run ci
 | `check:syntax` | `node --check` on core JS files |
 | `check:data` | `node scripts/validate-jobs.mjs` |
 | `test` | `node --test tests/*.mjs` |
-| `ci` | All of the above |
+| `test:e2e` | `playwright test` |
+| `ci` | Syntax + data + unit tests |
+| `ci:full` | `ci` + E2E |
 
 ---
 
@@ -148,7 +170,6 @@ Open `index.html` with Live Server or any static file server (recommended over `
 ## What I Would Improve Next
 
 - Backend API with server-side filtering and pagination
-- Broader automated tests (DOM/integration or Playwright)
 - Accessibility audit and targeted fixes
 - Deployment previews and release notes in CI
 
