@@ -11,7 +11,7 @@ This project is part of my portfolio focus on production-style frontend engineer
 
 | Job listing | Job details | Saved jobs | Dark mode |
 |:---:|:---:|:---:|:---:|
-| ![Job listing](./docs/screenshots/main.png) | ![Job details](./docs/screenshots/job-details.png) | ![Saved jobs](./docs/screenshots/saved-jobs.png) | ![Dark mode](./docs/screenshots/dark.png) |
+| ![Job listing](./docs/screenshots/main.webp) | ![Job details](./docs/screenshots/job-details.webp) | ![Saved jobs](./docs/screenshots/saved-jobs.webp) | ![Dark mode](./docs/screenshots/dark.webp) |
 
 ---
 
