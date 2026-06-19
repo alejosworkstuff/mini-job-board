@@ -1,5 +1,7 @@
 # Mini Job Board
 
+[![local CI](https://img.shields.io/badge/local%20CI-passing-brightgreen?logo=github-actions&logoColor=white)](.github/workflows/ci.yml) [![GitHub Pages](https://img.shields.io/badge/live-GitHub%20Pages-0075ff?logo=github&logoColor=white)](https://alejosworkstuff.github.io/mini-job-board/)
+
 A frontend job board built with vanilla JavaScript that simulates hiring-platform workflows: search, multi-filter, sorting, saved jobs, job modals, detail pages, and persisted UI preferences (theme and grid/list view).
 
 This project is part of my portfolio focus on production-style frontend engineering without framework abstractions.
@@ -55,7 +57,7 @@ mini-job-board/
 1. Load `data/jobs.json`
 2. Keep source data in memory
 3. Apply search text, type/seniority filters, and sort order
-4. Render jobs (grid or list) with optional “load more” batching
+4. Render jobs (grid or list) with optional "load more" batching
 5. Persist theme, view mode, and saved job IDs in `localStorage`
 
 ---
@@ -102,6 +104,8 @@ GitHub Actions (`.github/workflows/ci.yml`) on pull requests and pushes to `main
 - Data validation (`npm run check:data`) — required fields, unique IDs, non-empty arrays in `data/jobs.json`
 - Unit tests (`npm run test`) — `tests/filter-logic.test.mjs` via `node --test`
 - E2E tests (`npm run test:e2e`) — Playwright against a local static server (`serve` on port 4173)
+
+> Note: GitHub Actions may be temporarily unavailable due to account billing restrictions; the pipeline definition is valid and passes locally.
 
 Run locally:
 
