@@ -145,10 +145,24 @@ function initFilterDropdowns() {
 
 // ===== FETCH =====
 let jobsLoaded = false;
+let jobsLoadFailed = false;
 let domReady = false;
+
+function showJobsLoadError() {
+  jobsLoadFailed = true;
+  window.miniJobBoardJobsFetchError?.show();
+  if (resultsCount) resultsCount.textContent = "Jobs unavailable";
+  if (emptyState) emptyState.hidden = true;
+  if (jobsListElement) jobsListElement.innerHTML = "";
+  if (loadMoreBtn) loadMoreBtn.hidden = true;
+}
 
 function tryInitialRender() {
   if (!jobsLoaded || !domReady) return;
+  if (jobsLoadFailed) {
+    showJobsLoadError();
+    return;
+  }
   syncFilterDropdownLabels();
   applyFilters();
 }
@@ -156,16 +170,26 @@ function tryInitialRender() {
 readFiltersFromUrl();
 
 fetch("./data/jobs.json")
-  .then((response) => response.json())
+  .then((response) => {
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return response.json();
+  })
   .then((data) => {
+    window.miniJobBoardJobsFetchError?.hide();
     jobs = data;
     jobsLoaded = true;
+    jobsLoadFailed = false;
     tryInitialRender();
     if (savedJobsModal && !savedJobsModal.hidden) {
       renderSavedJobsList();
     }
   })
-  .catch((err) => console.error("Error loading jobs:", err));
+  .catch((err) => {
+    console.error("Error loading jobs:", err);
+    jobsLoaded = true;
+    jobsLoadFailed = true;
+    tryInitialRender();
+  });
 
 // ===== EVENTS =====
 searchInput.addEventListener("input", () => {
@@ -474,6 +498,11 @@ function renderJobs(list) {
 }
 
 function updateResults() {
+  if (jobsLoadFailed) {
+    showJobsLoadError();
+    return;
+  }
+
   const total = filteredJobs.length;
   const visible = filteredJobs.slice(0, currentPage * PAGE_SIZE);
 

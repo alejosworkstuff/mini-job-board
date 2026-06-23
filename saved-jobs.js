@@ -177,6 +177,8 @@ async function loadSavedJobs() {
     if (!response.ok) throw new Error(String(response.status));
     const jobs = await response.json();
 
+    window.miniJobBoardJobsFetchError?.hide();
+
     const savedJobs = jobs.filter((job) => saveIds.includes(job.id));
 
     if (savedJobs.length === 0) {
@@ -190,7 +192,9 @@ async function loadSavedJobs() {
     renderSavedJobsCards(savedJobs);
   } catch (error) {
     console.error("Could not load saved jobs:", error);
-    showEmpty();
+    if (savedJobsListElement) savedJobsListElement.innerHTML = "";
+    if (savedEmptyElement) savedEmptyElement.hidden = true;
+    window.miniJobBoardJobsFetchError?.show();
   }
 }
 

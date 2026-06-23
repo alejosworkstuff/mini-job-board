@@ -39,6 +39,7 @@ mini-job-board/
 ├── app.js               # Listing: search, filters, sort, pagination, modals
 ├── job-details.js       # Detail page logic
 ├── saved-jobs.js        # Saved jobs page logic
+├── jobs-fetch-error.js  # Shared fetch-failure banner (index + saved pages)
 ├── site-header.js       # Shared header (theme, menu) on secondary pages
 ├── styles.css           # Layout, dark mode, modals, responsive rules
 ├── data/jobs.json       # Job records (local data source)
@@ -100,7 +101,7 @@ mini-job-board/
 
 GitHub Actions (`.github/workflows/ci.yml`) on pull requests and pushes to `main`:
 
-- JavaScript syntax checks (`npm run check:syntax`) for `app.js`, `job-details.js`, `saved-jobs.js`, `site-header.js`
+- JavaScript syntax checks (`npm run check:syntax`) for `app.js`, `job-details.js`, `saved-jobs.js`, `site-header.js`, `jobs-fetch-error.js`
 - Data validation (`npm run check:data`) — required fields, unique IDs, non-empty arrays in `data/jobs.json`
 - Unit tests (`npm run test`) — `tests/filter-logic.test.mjs` via `node --test`
 - E2E tests (`npm run test:e2e`) — Playwright against a local static server (`serve` on port 4173)
@@ -116,11 +117,14 @@ npm run test:e2e    # Playwright (installs browsers on first run: npx playwright
 npm run ci:full     # all of the above
 ```
 
-### Playwright E2E (8 scenarios)
+### Playwright E2E (11 scenarios)
 
 | Spec file | Scenario |
 |-----------|----------|
 | `e2e/browse-save-jobs.spec.js` | Search, save a job, and open the saved jobs modal |
+| `e2e/saved-jobs-page.spec.js` | Save on listing, open `saved-jobs.html`, and apply from the saved page |
+| `e2e/jobs-fetch-error.spec.js` | Error banner when `jobs.json` fails on the index page |
+| `e2e/jobs-fetch-error.spec.js` | Error banner when `jobs.json` fails on the saved-jobs page |
 | `e2e/filter-url-state.spec.js` | Filter by job type and seniority from the UI |
 | `e2e/filter-url-state.spec.js` | Filter by salary band |
 | `e2e/filter-url-state.spec.js` | Load filter state from URL query params |

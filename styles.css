@@ -854,8 +854,39 @@ body.dark .filter-dropdown-panel {
   background: #f8fbff;
   text-align: center;
   padding: 20px;
-  display: grid;
   gap: 8px;
+}
+
+.empty-state:not([hidden]) {
+  display: grid;
+}
+
+.jobs-fetch-error {
+  margin-bottom: 14px;
+  border: 1px solid #f5c2c7;
+  border-radius: var(--radius-md);
+  background: #fff5f5;
+  color: #842029;
+  padding: 14px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+}
+
+.jobs-fetch-error-text {
+  margin: 0;
+  flex: 1 1 200px;
+}
+
+.jobs-fetch-retry {
+  flex-shrink: 0;
+}
+
+body.dark .jobs-fetch-error {
+  border-color: #7f1d1d;
+  background: #2a1215;
+  color: #fecaca;
 }
 
 .empty-illustration {

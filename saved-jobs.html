@@ -54,6 +54,10 @@
     </header>
 
     <main class="page saved-jobs-page">
+      <div id="jobs-fetch-error" class="jobs-fetch-error" role="alert" hidden>
+        <p class="jobs-fetch-error-text">Could not load job listings. Check your connection and try again.</p>
+        <button type="button" id="jobs-fetch-retry" class="ghost-btn jobs-fetch-retry">Retry</button>
+      </div>
       <h1 class="saved-jobs-page-title">Saved Jobs</h1>
       <p class="saved-jobs-page-lede"><a href="index.html" class="back-to-board">← All jobs</a></p>
       <div id="saved-jobs-list" class="saved-jobs-page-grid"></div>
@@ -115,6 +119,7 @@
       </div>
     </footer>
 
+    <script src="jobs-fetch-error.js"></script>
     <script src="site-header.js" defer></script>
     <script src="saved-jobs.js" defer></script>
   </body>
