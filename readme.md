@@ -106,7 +106,7 @@ GitHub Actions (`.github/workflows/ci.yml`) on pull requests and pushes to `main
 - Unit tests (`npm run test`) — `tests/filter-logic.test.mjs` via `node --test`
 - E2E tests (`npm run test:e2e`) — Playwright against a local static server (`serve` on port 4173)
 
-> Note: GitHub Actions may be temporarily unavailable due to account billing restrictions; the pipeline definition is valid and passes locally.
+> The pipeline runs on GitHub Actions on every push and pull request, and passes locally with the commands below.
 
 Run locally:
 
