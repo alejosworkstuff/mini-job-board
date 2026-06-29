@@ -14,6 +14,7 @@ test("save on listing, open saved-jobs page, and apply", async ({ page }) => {
   await expect(page.locator("#savedCount")).toHaveText("Saved: 1");
 
   await page.goto("/saved-jobs.html");
+  await expect(page.locator("#jobs-fetch-error")).toBeHidden();
   await expect(page.locator(".saved-jobs-card")).toHaveCount(1);
   await expect(page.locator(".saved-jobs-card")).toContainText("Fullstack Developer");
 

@@ -868,10 +868,13 @@ body.dark .filter-dropdown-panel {
   background: #fff5f5;
   color: #842029;
   padding: 14px 16px;
-  display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 10px 14px;
+}
+
+.jobs-fetch-error:not([hidden]) {
+  display: flex;
 }
 
 .jobs-fetch-error-text {

@@ -7,6 +7,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("search, save a job, and open saved jobs modal", async ({ page }) => {
+  await expect(page.locator("#jobs-fetch-error")).toBeHidden();
   await expect(page.locator("#resultsCount")).toContainText(/jobs? shown/);
   await expect(page.locator(".job")).not.toHaveCount(0);
 
