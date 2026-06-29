@@ -1,4 +1,5 @@
 import { applyJobFilters } from "./scripts/filter-logic.mjs";
+import { escapeHtml, normalizeUrlFilter, slugify } from "./scripts/utils.mjs";
 
 // ===== DOM =====
 const searchInput = document.getElementById("searchInput");
@@ -386,12 +387,6 @@ if (jobsListElement) {
 }
 
 // ===== FILTER LOGIC =====
-function normalizeUrlFilter(value, allowed) {
-  if (!value) return null;
-  const normalized = value.toLowerCase().trim().replace(/\s+/g, "-");
-  return allowed.has(normalized) ? normalized : null;
-}
-
 function readFiltersFromUrl() {
   const params = new URLSearchParams(window.location.search);
   const q = params.get("q") || params.get("search") || "";
@@ -643,19 +638,6 @@ function resetAllFilters() {
   toggleClearSearch();
   if (filterDropdownConfigs.length) syncFilterDropdownLabels();
   applyFilters();
-}
-
-function slugify(value = "") {
-  return value.toLowerCase().trim().replace(/\s+/g, "-");
-}
-
-function escapeHtml(text) {
-  const s = String(text ?? "");
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
 }
 
 function renderSavedJobsList() {

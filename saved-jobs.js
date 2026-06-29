@@ -1,3 +1,5 @@
+import { escapeHtml, slugify } from "./scripts/utils.mjs";
+
 const APPLIED_STORAGE_KEY = "appliedJobs";
 
 const savedJobsListElement = document.getElementById("saved-jobs-list");
@@ -208,19 +210,6 @@ if (savedJobsListElement) {
     const job = savedJobsPageJobs.find((j) => j.id === id);
     if (job) openJobModal(job);
   });
-}
-
-function escapeHtml(text) {
-  const s = String(text ?? "");
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-function slugify(value = "") {
-  return value.toLowerCase().trim().replace(/\s+/g, "-");
 }
 
 document.addEventListener("DOMContentLoaded", loadSavedJobs);

@@ -1,3 +1,5 @@
+import { slugify } from "./utils.mjs";
+
 const EUR_TO_USD = 1.08;
 
 const SALARY_BANDS = {
@@ -79,19 +81,17 @@ export function applyJobFilters(
   } = {}
 ) {
   const normalizedSearch = searchText.toLowerCase().trim();
-  const normalizedType = selectedType.toLowerCase();
-  const normalizedSeniority = selectedSeniority.toLowerCase();
+  const normalizedType = slugify(selectedType);
+  const normalizedSeniority = slugify(selectedSeniority);
 
   let filtered = [...jobs];
 
   if (normalizedType !== "all") {
-    filtered = filtered.filter((job) => String(job.type || "").toLowerCase() === normalizedType);
+    filtered = filtered.filter((job) => slugify(job.type || "") === normalizedType);
   }
 
   if (normalizedSeniority !== "all") {
-    filtered = filtered.filter(
-      (job) => String(job.seniority || "").toLowerCase() === normalizedSeniority
-    );
+    filtered = filtered.filter((job) => slugify(job.seniority || "") === normalizedSeniority);
   }
 
   if (selectedSalary !== "all") {

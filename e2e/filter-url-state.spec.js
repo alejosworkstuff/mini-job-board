@@ -19,7 +19,7 @@ test("filters by type and seniority from the UI", async ({ page }) => {
   await page.locator("#seniorityFilterList .filter-dropdown-option[data-value='senior']").click();
   await expect(page.locator(".job")).toHaveCount(6);
   await expect(page.locator("#activeFiltersBadge")).toHaveText("2");
-  await expect(page.locator("#resultsCount")).toContainText("6/6");
+  await expect(page.locator("#resultsCount")).toContainText("6 jobs shown");
 });
 
 test("filters by salary band", async ({ page }) => {

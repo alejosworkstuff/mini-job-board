@@ -1,3 +1,5 @@
+import { escapeHtml, slugify } from "./scripts/utils.mjs";
+
 const STORAGE_KEY = "savedJobs";
 const APPLIED_STORAGE_KEY = "appliedJobs";
 
@@ -25,15 +27,6 @@ const closeJobModalBtn = document.getElementById("closeJobModal");
 const confirmApplyBtn = document.getElementById("confirmApplyBtn");
 
 let currentJob = null;
-
-function escapeHtml(text) {
-  const s = String(text ?? "");
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
 
 function readSavedIds() {
   try {
@@ -112,10 +105,6 @@ function showToast(message) {
 }
 
 showToast.timerId = 0;
-
-function slugify(value = "") {
-  return value.toLowerCase().trim().replace(/\s+/g, "-");
-}
 
 function setMetaAndTitle(job) {
   document.title = `${job.title} · ${job.company} · Mini Job Board`;
