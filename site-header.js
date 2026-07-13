@@ -1,17 +1,26 @@
 /**
- * Shared shell: main top bar, account menu, Saved jobs modal, theme toggle.
+ * Shared shell: main top bar, account menu, Saved/Alerts/Settings modals, theme toggle.
  * Loaded after DOM; works on any page that includes the matching markup and ./data/jobs.json.
  */
 (function () {
   const darkModeBtn = document.getElementById("darkModeBtn");
   const userMenuBtn = document.getElementById("userMenuBtn");
   const userMenu = document.getElementById("userMenu");
-  const fakeHomeBtn = document.getElementById("fakeHomeBtn");
-  const fakeNotifBtn = document.getElementById("fakeNotifBtn");
+  const homeNavBtn = document.getElementById("homeNavBtn");
+  const alertsBtn = document.getElementById("alertsBtn");
+  const alertsBadge = document.getElementById("alertsBadge");
   const toast = document.getElementById("toast");
   const savedJobsModal = document.getElementById("savedJobsModal");
   const savedJobsList = document.getElementById("savedJobsList");
   const closeSavedJobsModalBtn = document.getElementById("closeSavedJobsModal");
+  const alertsModal = document.getElementById("alertsModal");
+  const alertsList = document.getElementById("alertsList");
+  const closeAlertsModalBtn = document.getElementById("closeAlertsModal");
+  const settingsModal = document.getElementById("settingsModal");
+  const closeSettingsModalBtn = document.getElementById("closeSettingsModal");
+  const settingsThemeBtn = document.getElementById("settingsThemeBtn");
+  const clearSavedBtn = document.getElementById("clearSavedBtn");
+  const clearAppliedBtn = document.getElementById("clearAppliedBtn");
 
   if (!userMenuBtn) return;
 
@@ -22,6 +31,15 @@
     try {
       const saved = JSON.parse(localStorage.getItem("savedJobs") || "[]");
       return Array.isArray(saved) ? saved.filter((id) => Number.isInteger(id)) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function readStoredAppliedJobs() {
+    try {
+      const applied = JSON.parse(localStorage.getItem("appliedJobs") || "[]");
+      return Array.isArray(applied) ? applied.filter((id) => Number.isInteger(id)) : [];
     } catch {
       return [];
     }
@@ -47,11 +65,50 @@
   }
   showToast.timerId = 0;
 
+  function isHomePage() {
+    const path = window.location.pathname.replace(/\\/g, "/");
+    return (
+      path.endsWith("/") ||
+      path.endsWith("/index.html") ||
+      /\/mini-job-board\/?$/.test(path)
+    );
+  }
+
+  function syncThemeButtons() {
+    const isDark = document.body.classList.contains("dark");
+    const label = isDark ? "Light" : "Dark";
+    if (darkModeBtn) darkModeBtn.textContent = label;
+    if (settingsThemeBtn) settingsThemeBtn.textContent = label;
+  }
+
+  function setTheme(isDark) {
+    document.body.classList.toggle("dark", isDark);
+    localStorage.setItem("darkMode", String(isDark));
+    syncThemeButtons();
+  }
+
+  function toggleTheme() {
+    setTheme(!document.body.classList.contains("dark"));
+  }
+
   function updateSavedCountShell() {
     const el = document.getElementById("savedCount");
     if (!el) return;
     savedJobsSet = new Set(readStoredSavedJobs());
     el.textContent = `Saved: ${savedJobsSet.size}`;
+  }
+
+  function updateAlertsBadge() {
+    if (!alertsBadge) return;
+    const count = readStoredAppliedJobs().length;
+    alertsBadge.textContent = String(count);
+    alertsBadge.hidden = count === 0;
+    if (alertsBtn) {
+      alertsBtn.setAttribute(
+        "aria-label",
+        count === 0 ? "Application alerts" : `Application alerts (${count})`
+      );
+    }
   }
 
   function toggleSavedJobShell(id) {
@@ -63,6 +120,19 @@
     if (typeof window.miniJobBoardOnSavedChanged === "function") {
       window.miniJobBoardOnSavedChanged();
     }
+  }
+
+  function anyOverlayOpen() {
+    return (
+      (savedJobsModal && !savedJobsModal.hidden) ||
+      (alertsModal && !alertsModal.hidden) ||
+      (settingsModal && !settingsModal.hidden) ||
+      (document.getElementById("jobModal") && !document.getElementById("jobModal").hidden)
+    );
+  }
+
+  function syncBodyScroll() {
+    document.body.style.overflow = anyOverlayOpen() ? "hidden" : "";
   }
 
   function renderSavedJobsList() {
@@ -112,21 +182,94 @@
     savedJobsList.innerHTML = rows;
   }
 
+  function renderAlertsList() {
+    if (!alertsList) return;
+    const ids = readStoredAppliedJobs();
+
+    if (ids.length === 0) {
+      alertsList.innerHTML =
+        '<p class="alerts-empty">No applications yet. Apply to a role to see it here.</p>';
+      return;
+    }
+
+    if (headerJobs.length === 0) {
+      alertsList.innerHTML = '<p class="alerts-empty">Loading jobs…</p>';
+      return;
+    }
+
+    alertsList.innerHTML = ids
+      .map((id) => {
+        const job = headerJobs.find((j) => j.id === id);
+        if (!job) {
+          return `
+          <div class="alert-row">
+            <div class="alert-row-main">
+              <p class="alert-row-title">Listing #${id}</p>
+              <p class="alert-row-company">No longer available</p>
+            </div>
+          </div>`;
+        }
+        return `
+        <article class="alert-row">
+          <div class="alert-row-main">
+            <h3 class="alert-row-title">${escapeHtml(job.title)}</h3>
+            <p class="alert-row-company">${escapeHtml(job.company)}</p>
+          </div>
+          <a href="job-details.html?id=${job.id}" class="ghost-btn">Details</a>
+        </article>`;
+      })
+      .join("");
+  }
+
   function openSavedJobsModal() {
     if (!savedJobsModal) return;
+    closeAlertsModal();
+    closeSettingsModal();
     renderSavedJobsList();
     savedJobsModal.hidden = false;
-    document.body.style.overflow = "hidden";
+    syncBodyScroll();
     if (closeSavedJobsModalBtn) closeSavedJobsModalBtn.focus();
   }
 
   function closeSavedJobsModal() {
     if (!savedJobsModal) return;
     savedJobsModal.hidden = true;
-    const jobModal = document.getElementById("jobModal");
-    if (!jobModal || jobModal.hidden) {
-      document.body.style.overflow = "";
-    }
+    syncBodyScroll();
+  }
+
+  function openAlertsModal() {
+    if (!alertsModal) return;
+    closeSavedJobsModal();
+    closeSettingsModal();
+    closeUserMenu();
+    renderAlertsList();
+    alertsModal.hidden = false;
+    if (alertsBtn) alertsBtn.setAttribute("aria-expanded", "true");
+    syncBodyScroll();
+    if (closeAlertsModalBtn) closeAlertsModalBtn.focus();
+  }
+
+  function closeAlertsModal() {
+    if (!alertsModal) return;
+    alertsModal.hidden = true;
+    if (alertsBtn) alertsBtn.setAttribute("aria-expanded", "false");
+    syncBodyScroll();
+  }
+
+  function openSettingsModal() {
+    if (!settingsModal) return;
+    closeSavedJobsModal();
+    closeAlertsModal();
+    syncThemeButtons();
+    settingsModal.hidden = false;
+    syncBodyScroll();
+    if (closeSettingsModalBtn) closeSettingsModalBtn.focus();
+  }
+
+  function closeSettingsModal() {
+    if (!settingsModal) return;
+    settingsModal.hidden = true;
+    syncBodyScroll();
   }
 
   function isUserMenuOpen() {
@@ -176,9 +319,38 @@
 
   if (darkModeBtn) {
     darkModeBtn.addEventListener("click", () => {
-      const isDark = document.body.classList.toggle("dark");
-      localStorage.setItem("darkMode", String(isDark));
-      darkModeBtn.textContent = isDark ? "Light" : "Dark";
+      toggleTheme();
+    });
+  }
+
+  if (settingsThemeBtn) {
+    settingsThemeBtn.addEventListener("click", () => {
+      toggleTheme();
+    });
+  }
+
+  if (clearSavedBtn) {
+    clearSavedBtn.addEventListener("click", () => {
+      localStorage.setItem("savedJobs", "[]");
+      savedJobsSet = new Set();
+      updateSavedCountShell();
+      if (typeof window.miniJobBoardOnSavedCleared === "function") {
+        window.miniJobBoardOnSavedCleared();
+      }
+      if (savedJobsModal && !savedJobsModal.hidden) renderSavedJobsList();
+      showToast("Saved jobs cleared");
+    });
+  }
+
+  if (clearAppliedBtn) {
+    clearAppliedBtn.addEventListener("click", () => {
+      localStorage.setItem("appliedJobs", "[]");
+      updateAlertsBadge();
+      if (typeof window.miniJobBoardOnAppliedCleared === "function") {
+        window.miniJobBoardOnAppliedCleared();
+      }
+      if (alertsModal && !alertsModal.hidden) renderAlertsList();
+      showToast("Applications cleared");
     });
   }
 
@@ -191,31 +363,30 @@
     userMenu.querySelectorAll(".user-menu-item").forEach((item) => {
       item.addEventListener("click", () => {
         const action = item.dataset.action;
+        closeUserMenu();
         if (action === "saved-jobs") {
-          closeUserMenu();
           openSavedJobsModal();
           return;
         }
-        const labels = {
-          profile: "View Profile (demo)",
-          settings: "Settings (demo)",
-          signout: "Sign out (demo)"
-        };
-        showToast(labels[action] || "Done");
-        closeUserMenu();
+        if (action === "settings") {
+          openSettingsModal();
+        }
       });
     });
   }
 
-  if (fakeHomeBtn) {
-    fakeHomeBtn.addEventListener("click", () => {
-      showToast("Home (demo)");
+  if (homeNavBtn) {
+    homeNavBtn.addEventListener("click", (event) => {
+      if (!isHomePage()) return;
+      event.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
     });
   }
 
-  if (fakeNotifBtn) {
-    fakeNotifBtn.addEventListener("click", () => {
-      showToast("Notifications (demo)");
+  if (alertsBtn) {
+    alertsBtn.addEventListener("click", () => {
+      if (alertsModal && !alertsModal.hidden) closeAlertsModal();
+      else openAlertsModal();
     });
   }
 
@@ -266,10 +437,38 @@
     closeSavedJobsModalBtn.addEventListener("click", closeSavedJobsModal);
   }
 
+  if (alertsModal) {
+    alertsModal.addEventListener("click", (event) => {
+      if (event.target.closest("[data-close-alerts-modal]")) closeAlertsModal();
+    });
+  }
+
+  if (closeAlertsModalBtn) {
+    closeAlertsModalBtn.addEventListener("click", closeAlertsModal);
+  }
+
+  if (settingsModal) {
+    settingsModal.addEventListener("click", (event) => {
+      if (event.target.closest("[data-close-settings-modal]")) closeSettingsModal();
+    });
+  }
+
+  if (closeSettingsModalBtn) {
+    closeSettingsModalBtn.addEventListener("click", closeSettingsModal);
+  }
+
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape") return;
     if (isUserMenuOpen()) {
       closeUserMenu();
+      return;
+    }
+    if (settingsModal && !settingsModal.hidden) {
+      closeSettingsModal();
+      return;
+    }
+    if (alertsModal && !alertsModal.hidden) {
+      closeAlertsModal();
       return;
     }
     if (savedJobsModal && !savedJobsModal.hidden) {
@@ -282,6 +481,8 @@
     }
   });
 
+  window.miniJobBoardRefreshAlertsBadge = updateAlertsBadge;
+
   fetch("./data/jobs.json")
     .then((response) => response.json())
     .then((data) => {
@@ -289,14 +490,15 @@
       if (savedJobsModal && !savedJobsModal.hidden) {
         renderSavedJobsList();
       }
+      if (alertsModal && !alertsModal.hidden) {
+        renderAlertsList();
+      }
     })
     .catch((err) => console.error("Error loading jobs for header:", err));
 
   const isDarkInit = localStorage.getItem("darkMode") === "true";
-  document.body.classList.toggle("dark", isDarkInit);
-  if (darkModeBtn) {
-    darkModeBtn.textContent = isDarkInit ? "Light" : "Dark";
-  }
+  setTheme(isDarkInit);
   savedJobsSet = new Set(readStoredSavedJobs());
   updateSavedCountShell();
+  updateAlertsBadge();
 })();

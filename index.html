@@ -17,18 +17,27 @@
       </div>
       <div class="top-bar-spacer" aria-hidden="true"></div>
       <div class="header-actions">
-        <div class="header-fake-nav" role="toolbar" aria-label="Demo navigation">
-          <button type="button" class="header-icon-btn" id="fakeHomeBtn" aria-label="Home (demo)">
+        <div class="header-nav" role="toolbar" aria-label="Site navigation">
+          <a href="index.html" class="header-icon-btn" id="homeNavBtn" aria-label="Home">
             <svg class="header-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-10.5z" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
             <span class="header-icon-label">Home</span>
-          </button>
-          <button type="button" class="header-icon-btn" id="fakeNotifBtn" aria-label="Notifications (demo)">
+          </a>
+          <button
+            type="button"
+            class="header-icon-btn header-alerts-btn"
+            id="alertsBtn"
+            aria-label="Application alerts"
+            aria-haspopup="dialog"
+            aria-expanded="false"
+            aria-controls="alertsModal"
+          >
             <svg class="header-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0v1a3 3 0 11-6 0v-1" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
             <span class="header-icon-label">Alerts</span>
+            <span id="alertsBadge" class="header-alerts-badge" hidden>0</span>
           </button>
         </div>
         <button id="darkModeBtn" class="theme-toggle header-theme" type="button" aria-label="Toggle theme">Dark</button>
@@ -44,10 +53,8 @@
             <span class="user-avatar" aria-hidden="true">AC</span>
           </button>
           <div id="userMenu" class="user-menu" role="menu" aria-hidden="true">
-            <button type="button" role="menuitem" class="user-menu-item" data-action="profile">View Profile</button>
             <button type="button" role="menuitem" class="user-menu-item" data-action="saved-jobs">Saved Jobs</button>
             <button type="button" role="menuitem" class="user-menu-item" data-action="settings">Settings</button>
-            <button type="button" role="menuitem" class="user-menu-item" data-action="signout">Sign out</button>
           </div>
         </div>
       </div>
@@ -252,6 +259,57 @@
         </button>
         <h2 id="savedJobsModalTitle" class="saved-jobs-modal-title">Saved jobs</h2>
         <div id="savedJobsList" class="saved-jobs-list"></div>
+      </div>
+    </div>
+
+    <div id="alertsModal" class="job-modal alerts-modal" hidden>
+      <div class="job-modal-backdrop" data-close-alerts-modal></div>
+      <div
+        class="job-modal-content alerts-modal-inner"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="alertsModalTitle"
+      >
+        <button type="button" class="job-modal-close" id="closeAlertsModal" aria-label="Close alerts">×</button>
+        <h2 id="alertsModalTitle" class="alerts-modal-title">Recent applications</h2>
+        <p class="alerts-modal-lede">Jobs you marked as applied on this device.</p>
+        <div id="alertsList" class="alerts-list"></div>
+      </div>
+    </div>
+
+    <div id="settingsModal" class="job-modal settings-modal" hidden>
+      <div class="job-modal-backdrop" data-close-settings-modal></div>
+      <div
+        class="job-modal-content settings-modal-inner"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="settingsModalTitle"
+      >
+        <button type="button" class="job-modal-close" id="closeSettingsModal" aria-label="Close settings">×</button>
+        <h2 id="settingsModalTitle" class="settings-modal-title">Settings</h2>
+        <div class="settings-list">
+          <div class="settings-row">
+            <div class="settings-row-copy">
+              <span class="settings-row-label">Theme</span>
+              <span class="settings-row-hint">Light or dark mode for this device</span>
+            </div>
+            <button type="button" id="settingsThemeBtn" class="ghost-btn">Dark</button>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-copy">
+              <span class="settings-row-label">Saved jobs</span>
+              <span class="settings-row-hint">Remove all saved listings</span>
+            </div>
+            <button type="button" id="clearSavedBtn" class="ghost-btn">Clear</button>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-copy">
+              <span class="settings-row-label">Applications</span>
+              <span class="settings-row-hint">Clear applied-job tracking</span>
+            </div>
+            <button type="button" id="clearAppliedBtn" class="ghost-btn">Clear</button>
+          </div>
+        </div>
       </div>
     </div>
 

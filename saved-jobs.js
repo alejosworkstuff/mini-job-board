@@ -154,6 +154,7 @@ if (confirmApplyBtn) {
     setApplied(modalJobId, true);
     updateModalApplyButton();
     renderSavedJobsCards(savedJobsPageJobs);
+    window.miniJobBoardRefreshAlertsBadge?.();
     showToast("Application recorded — good luck!");
   });
 }
@@ -164,6 +165,15 @@ window.miniJobBoardOpenJobModal = function (job) {
 
 window.miniJobBoardCloseJobModal = function () {
   closeJobModal();
+};
+
+window.miniJobBoardOnSavedCleared = function () {
+  loadSavedJobs();
+};
+
+window.miniJobBoardOnAppliedCleared = function () {
+  if (modalJobId !== null) updateModalApplyButton();
+  renderSavedJobsCards(savedJobsPageJobs);
 };
 
 async function loadSavedJobs() {

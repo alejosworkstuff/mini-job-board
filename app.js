@@ -21,8 +21,9 @@ const emptyResetBtn = document.getElementById("emptyResetBtn");
 const darkModeBtn = document.getElementById("darkModeBtn");
 const userMenuBtn = document.getElementById("userMenuBtn");
 const userMenu = document.getElementById("userMenu");
-const fakeHomeBtn = document.getElementById("fakeHomeBtn");
-const fakeNotifBtn = document.getElementById("fakeNotifBtn");
+const homeNavBtn = document.getElementById("homeNavBtn");
+const alertsBtn = document.getElementById("alertsBtn");
+const alertsBadge = document.getElementById("alertsBadge");
 const toast = document.getElementById("toast");
 const viewGridBtn = document.getElementById("viewGridBtn");
 const viewListBtn = document.getElementById("viewListBtn");
@@ -39,6 +40,14 @@ const confirmApplyBtn = document.getElementById("confirmApplyBtn");
 const savedJobsModal = document.getElementById("savedJobsModal");
 const savedJobsList = document.getElementById("savedJobsList");
 const closeSavedJobsModalBtn = document.getElementById("closeSavedJobsModal");
+const alertsModal = document.getElementById("alertsModal");
+const alertsList = document.getElementById("alertsList");
+const closeAlertsModalBtn = document.getElementById("closeAlertsModal");
+const settingsModal = document.getElementById("settingsModal");
+const closeSettingsModalBtn = document.getElementById("closeSettingsModal");
+const settingsThemeBtn = document.getElementById("settingsThemeBtn");
+const clearSavedBtn = document.getElementById("clearSavedBtn");
+const clearAppliedBtn = document.getElementById("clearAppliedBtn");
 
 // ===== DATA =====
 let jobs = [];
@@ -254,10 +263,44 @@ if (toggleFiltersBtn && filtersPanel && filtersWrapper) {
 
 if (darkModeBtn) {
   darkModeBtn.addEventListener("click", () => {
-    const isDark = document.body.classList.toggle("dark");
-    localStorage.setItem("darkMode", String(isDark));
-    darkModeBtn.textContent = isDark ? "Light" : "Dark";
+    toggleTheme();
   });
+}
+
+if (settingsThemeBtn) {
+  settingsThemeBtn.addEventListener("click", () => {
+    toggleTheme();
+  });
+}
+
+function syncThemeButtons() {
+  const isDark = document.body.classList.contains("dark");
+  const label = isDark ? "Light" : "Dark";
+  if (darkModeBtn) darkModeBtn.textContent = label;
+  if (settingsThemeBtn) settingsThemeBtn.textContent = label;
+}
+
+function setTheme(isDark) {
+  document.body.classList.toggle("dark", isDark);
+  localStorage.setItem("darkMode", String(isDark));
+  syncThemeButtons();
+}
+
+function toggleTheme() {
+  setTheme(!document.body.classList.contains("dark"));
+}
+
+function updateAlertsBadge() {
+  if (!alertsBadge) return;
+  const count = appliedJobs.size;
+  alertsBadge.textContent = String(count);
+  alertsBadge.hidden = count === 0;
+  if (alertsBtn) {
+    alertsBtn.setAttribute(
+      "aria-label",
+      count === 0 ? "Application alerts" : `Application alerts (${count})`
+    );
+  }
 }
 
 function isUserMenuOpen() {
@@ -305,6 +348,19 @@ function toggleUserMenu() {
   else openUserMenu();
 }
 
+function anyOverlayOpen() {
+  return (
+    (savedJobsModal && !savedJobsModal.hidden) ||
+    (alertsModal && !alertsModal.hidden) ||
+    (settingsModal && !settingsModal.hidden) ||
+    (jobModal && !jobModal.hidden)
+  );
+}
+
+function syncBodyScroll() {
+  document.body.style.overflow = anyOverlayOpen() ? "hidden" : "";
+}
+
 if (userMenuBtn && userMenu) {
   userMenuBtn.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -314,31 +370,57 @@ if (userMenuBtn && userMenu) {
   userMenu.querySelectorAll(".user-menu-item").forEach((item) => {
     item.addEventListener("click", () => {
       const action = item.dataset.action;
+      closeUserMenu();
       if (action === "saved-jobs") {
-        closeUserMenu();
         openSavedJobsModal();
         return;
       }
-      const labels = {
-        profile: "View Profile (demo)",
-        settings: "Settings (demo)",
-        signout: "Sign out (demo)"
-      };
-      showToast(labels[action] || "Done");
-      closeUserMenu();
+      if (action === "settings") {
+        openSettingsModal();
+      }
     });
   });
 }
 
-if (fakeHomeBtn) {
-  fakeHomeBtn.addEventListener("click", () => {
-    showToast("Home (demo)");
+if (homeNavBtn) {
+  homeNavBtn.addEventListener("click", (event) => {
+    const path = window.location.pathname.replace(/\\/g, "/");
+    const onHome =
+      path.endsWith("/") || path.endsWith("/index.html") || /\/mini-job-board\/?$/.test(path);
+    if (!onHome) return;
+    event.preventDefault();
+    window.scrollTo({ top: 0, behavior: "smooth" });
   });
 }
 
-if (fakeNotifBtn) {
-  fakeNotifBtn.addEventListener("click", () => {
-    showToast("Notifications (demo)");
+if (alertsBtn) {
+  alertsBtn.addEventListener("click", () => {
+    if (alertsModal && !alertsModal.hidden) closeAlertsModal();
+    else openAlertsModal();
+  });
+}
+
+if (clearSavedBtn) {
+  clearSavedBtn.addEventListener("click", () => {
+    savedJobs = new Set();
+    localStorage.setItem("savedJobs", "[]");
+    updateSavedCount();
+    updateResults();
+    if (savedJobsModal && !savedJobsModal.hidden) renderSavedJobsList();
+    showToast("Saved jobs cleared");
+  });
+}
+
+if (clearAppliedBtn) {
+  clearAppliedBtn.addEventListener("click", () => {
+    appliedJobs = new Set();
+    localStorage.setItem("appliedJobs", "[]");
+    updateAppliedCount();
+    updateAlertsBadge();
+    updateResults();
+    updateApplyButtonState();
+    if (alertsModal && !alertsModal.hidden) renderAlertsList();
+    showToast("Applications cleared");
   });
 }
 
@@ -445,7 +527,7 @@ function renderJobs(list) {
     const jobCard = document.createElement("article");
     jobCard.className = "job";
     jobCard.tabIndex = 0;
-    jobCard.style.animationDelay = `${index * 45}ms`;
+    jobCard.style.animationDelay = `${index * 55}ms`;
 
     const badgeClass = slugify(job.seniority);
     const chips = [
@@ -609,6 +691,7 @@ function markJobApplied(id) {
   appliedJobs.add(id);
   localStorage.setItem("appliedJobs", JSON.stringify([...appliedJobs]));
   updateAppliedCount();
+  updateAlertsBadge();
 }
 
 function readStoredAppliedJobs() {
@@ -686,20 +769,94 @@ function renderSavedJobsList() {
   savedJobsList.innerHTML = rows;
 }
 
+function renderAlertsList() {
+  if (!alertsList) return;
+  const ids = [...appliedJobs];
+
+  if (ids.length === 0) {
+    alertsList.innerHTML =
+      '<p class="alerts-empty">No applications yet. Apply to a role to see it here.</p>';
+    return;
+  }
+
+  if (jobs.length === 0) {
+    alertsList.innerHTML = '<p class="alerts-empty">Loading jobs…</p>';
+    return;
+  }
+
+  alertsList.innerHTML = ids
+    .map((id) => {
+      const job = jobs.find((j) => j.id === id);
+      if (!job) {
+        return `
+          <div class="alert-row">
+            <div class="alert-row-main">
+              <p class="alert-row-title">Listing #${id}</p>
+              <p class="alert-row-company">No longer available</p>
+            </div>
+          </div>`;
+      }
+      return `
+        <article class="alert-row">
+          <div class="alert-row-main">
+            <h3 class="alert-row-title">${escapeHtml(job.title)}</h3>
+            <p class="alert-row-company">${escapeHtml(job.company)}</p>
+          </div>
+          <a href="job-details.html?id=${job.id}" class="ghost-btn">Details</a>
+        </article>`;
+    })
+    .join("");
+}
+
 function openSavedJobsModal() {
   if (!savedJobsModal) return;
+  closeAlertsModal();
+  closeSettingsModal();
   renderSavedJobsList();
   savedJobsModal.hidden = false;
-  document.body.style.overflow = "hidden";
+  syncBodyScroll();
   if (closeSavedJobsModalBtn) closeSavedJobsModalBtn.focus();
 }
 
 function closeSavedJobsModal() {
   if (!savedJobsModal) return;
   savedJobsModal.hidden = true;
-  if (!jobModal || jobModal.hidden) {
-    document.body.style.overflow = "";
-  }
+  syncBodyScroll();
+}
+
+function openAlertsModal() {
+  if (!alertsModal) return;
+  closeSavedJobsModal();
+  closeSettingsModal();
+  closeUserMenu();
+  renderAlertsList();
+  alertsModal.hidden = false;
+  if (alertsBtn) alertsBtn.setAttribute("aria-expanded", "true");
+  syncBodyScroll();
+  if (closeAlertsModalBtn) closeAlertsModalBtn.focus();
+}
+
+function closeAlertsModal() {
+  if (!alertsModal) return;
+  alertsModal.hidden = true;
+  if (alertsBtn) alertsBtn.setAttribute("aria-expanded", "false");
+  syncBodyScroll();
+}
+
+function openSettingsModal() {
+  if (!settingsModal) return;
+  closeSavedJobsModal();
+  closeAlertsModal();
+  syncThemeButtons();
+  settingsModal.hidden = false;
+  syncBodyScroll();
+  if (closeSettingsModalBtn) closeSettingsModalBtn.focus();
+}
+
+function closeSettingsModal() {
+  if (!settingsModal) return;
+  settingsModal.hidden = true;
+  syncBodyScroll();
 }
 
 if (savedJobsList) {
@@ -739,6 +896,26 @@ if (closeSavedJobsModalBtn) {
   closeSavedJobsModalBtn.addEventListener("click", closeSavedJobsModal);
 }
 
+if (alertsModal) {
+  alertsModal.addEventListener("click", (event) => {
+    if (event.target.closest("[data-close-alerts-modal]")) closeAlertsModal();
+  });
+}
+
+if (closeAlertsModalBtn) {
+  closeAlertsModalBtn.addEventListener("click", closeAlertsModal);
+}
+
+if (settingsModal) {
+  settingsModal.addEventListener("click", (event) => {
+    if (event.target.closest("[data-close-settings-modal]")) closeSettingsModal();
+  });
+}
+
+if (closeSettingsModalBtn) {
+  closeSettingsModalBtn.addEventListener("click", closeSettingsModal);
+}
+
 function openJobModal(job) {
   if (!jobModal || !jobModalTitle) return;
 
@@ -759,7 +936,7 @@ function openJobModal(job) {
   updateApplyButtonState();
 
   jobModal.hidden = false;
-  document.body.style.overflow = "hidden";
+  syncBodyScroll();
   if (closeJobModalBtn) closeJobModalBtn.focus();
 }
 
@@ -767,9 +944,7 @@ function closeJobModal() {
   if (!jobModal) return;
   jobModal.hidden = true;
   modalJobId = null;
-  if (!savedJobsModal || savedJobsModal.hidden) {
-    document.body.style.overflow = "";
-  }
+  syncBodyScroll();
 }
 
 if (jobModal) {
@@ -799,6 +974,14 @@ document.addEventListener("keydown", (event) => {
     closeUserMenu();
     return;
   }
+  if (settingsModal && !settingsModal.hidden) {
+    closeSettingsModal();
+    return;
+  }
+  if (alertsModal && !alertsModal.hidden) {
+    closeAlertsModal();
+    return;
+  }
   if (savedJobsModal && !savedJobsModal.hidden) {
     closeSavedJobsModal();
     return;
@@ -809,14 +992,12 @@ document.addEventListener("keydown", (event) => {
 // ===== INIT =====
 document.addEventListener("DOMContentLoaded", () => {
   const isDark = localStorage.getItem("darkMode") === "true";
-  document.body.classList.toggle("dark", isDark);
-  if (darkModeBtn) {
-    darkModeBtn.textContent = isDark ? "Light" : "Dark";
-  }
+  setTheme(isDark);
   setViewMode(currentView);
   toggleClearSearch();
   updateSavedCount();
   updateAppliedCount();
+  updateAlertsBadge();
   initFilterDropdowns();
   domReady = true;
   tryInitialRender();

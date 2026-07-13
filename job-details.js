@@ -330,6 +330,7 @@ if (confirmApplyBtn) {
     setApplied(currentJob.id, true);
     updateApplyButton();
     updateModalApplyButton();
+    window.miniJobBoardRefreshAlertsBadge?.();
     showToast("Application recorded — good luck!");
   });
 }
@@ -368,6 +369,15 @@ window.miniJobBoardOnSavedChanged = function () {
 
 window.miniJobBoardAfterRemoveSaved = function () {
   updateSaveButton();
+};
+
+window.miniJobBoardOnSavedCleared = function () {
+  updateSaveButton();
+};
+
+window.miniJobBoardOnAppliedCleared = function () {
+  updateApplyButton();
+  updateModalApplyButton();
 };
 
 document.addEventListener("DOMContentLoaded", init);
