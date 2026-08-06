@@ -111,7 +111,7 @@ function setMetaAndTitle(job) {
   const summary =
     job.description && job.description.length > 160
       ? `${job.description.slice(0, 157)}…`
-      : job.description || `${job.title} at ${job.company} — ${job.type}, ${job.location}.`;
+      : job.description || `${job.title} at ${job.company}, ${job.type}, ${job.location}.`;
   const desc = document.querySelector('meta[name="description"]');
   if (desc) desc.setAttribute("content", summary);
   const ogTitle = document.querySelector('meta[property="og:title"]');
@@ -179,9 +179,9 @@ function renderAboutRole(job) {
   if (!detailAboutInner) return;
 
   const employment = job.employment || "Full-time";
-  const workplace = job.type || "—";
-  const location = job.location || "—";
-  const seniority = job.seniority || "—";
+  const workplace = job.type || "-";
+  const location = job.location || "-";
+  const seniority = job.seniority || "-";
 
   const salaryBlock = job.salary
     ? `<div class="job-details-compensation">
@@ -331,7 +331,7 @@ if (confirmApplyBtn) {
     updateApplyButton();
     updateModalApplyButton();
     window.miniJobBoardRefreshAlertsBadge?.();
-    showToast("Application recorded — good luck!");
+    showToast("Application recorded. Good luck!");
   });
 }
 

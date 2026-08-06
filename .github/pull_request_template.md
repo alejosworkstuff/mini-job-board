@@ -9,11 +9,11 @@
 
 ## Type
 
-- [ ] feat — new feature
-- [ ] fix — bug fix
-- [ ] chore — deps / config / tooling
-- [ ] docs — documentation only
-- [ ] refactor — no behavior change
+- [ ] feat: new feature
+- [ ] fix: bug fix
+- [ ] chore: deps / config / tooling
+- [ ] docs: documentation only
+- [ ] refactor: no behavior change
 
 ## Checklist
 

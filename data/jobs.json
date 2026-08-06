@@ -8,7 +8,7 @@
     "seniority": "Semi-Senior",
     "employment": "Full-time",
     "salary": "$4k–6k USD / month",
-    "description": "We're scaling our product team and looking for a fullstack engineer who enjoys ownership end to end—from API design to polished UI. You'll join a fully distributed crew across LATAM with async-friendly rituals, code review culture, and room to influence architecture.",
+    "description": "We're scaling our product team and looking for a fullstack engineer who enjoys ownership end to end, from API design to polished UI. You'll join a fully distributed crew across LATAM with async-friendly rituals, code review culture, and room to influence architecture.",
     "responsibilities": [
       "Design and implement features in NestJS services and PostgreSQL, with attention to migrations and performance.",
       "Build and maintain React features with TypeScript, shared hooks, and accessible components.",
@@ -69,7 +69,7 @@
     "salary": "$6k–9k USD / month",
     "description": "Our web app serves millions of sessions; performance, accessibility, and maintainability are the product. You'll set the bar for how we load data, structure routes, and ship UI that works for everyone.",
     "responsibilities": [
-      "Own complex flows in React—routing, caching, and optimistic updates with clear failure modes.",
+      "Own complex flows in React, routing, caching, and optimistic updates with clear failure modes.",
       "Drive Core Web Vitals and a11y fixes across squads; partner with design on tokens and motion.",
       "Mentor engineers through design docs, pairing, and crisp code review.",
       "Represent frontend in technical planning; flag risk early and propose incremental mitigations."
@@ -98,7 +98,7 @@
     "salary": "$5k–7k USD / month",
     "description": "You'll shape end-to-end journeys from problem framing to polished UI, working shoulder-to-shoulder with PM and engineering. We value systems thinking, crisp documentation, and validation with real usage data.",
     "responsibilities": [
-      "Lead discovery for major initiatives—interviews, journey maps, and lightweight prototyping.",
+      "Lead discovery for major initiatives, interviews, journey maps, and lightweight prototyping.",
       "Produce and maintain Figma libraries aligned with engineering components.",
       "Run usability tests and translate findings into iterative improvements.",
       "Facilitate workshops that align stakeholders without endless meetings."
@@ -183,7 +183,7 @@
     "seniority": "Senior",
     "employment": "Full-time",
     "salary": "€65k–80k gross / year",
-    "description": "We make deployments boring—in a good way. You'll harden CI/CD, codify infrastructure, and make observability actionable so teams can move fast without breaking trust with customers.",
+    "description": "We make deployments boring, in a good way. You'll harden CI/CD, codify infrastructure, and make observability actionable so teams can move fast without breaking trust with customers.",
     "responsibilities": [
       "Own GitHub Actions pipelines and artifact promotion strategies across environments.",
       "Maintain Terraform modules for AWS footprint; review changes with platform peers.",

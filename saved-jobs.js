@@ -155,7 +155,7 @@ if (confirmApplyBtn) {
     updateModalApplyButton();
     renderSavedJobsCards(savedJobsPageJobs);
     window.miniJobBoardRefreshAlertsBadge?.();
-    showToast("Application recorded — good luck!");
+    showToast("Application recorded. Good luck!");
   });
 }
 

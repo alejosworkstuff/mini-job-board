@@ -963,7 +963,7 @@ if (confirmApplyBtn) {
     markJobApplied(modalJobId);
     updateApplyButtonState();
     updateResults();
-    showToast("Application recorded — good luck!");
+    showToast("Application recorded. Good luck!");
   });
 }
 
