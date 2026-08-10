@@ -1,7 +1,3 @@
-/**
- * Shared shell: main top bar, account menu, Saved/Alerts/Settings modals, theme toggle.
- * Loaded after DOM; works on any page that includes the matching markup and ./data/jobs.json.
- */
 (function () {
   const darkModeBtn = document.getElementById("darkModeBtn");
   const userMenuBtn = document.getElementById("userMenuBtn");
